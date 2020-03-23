@@ -1,0 +1,58 @@
+{
+	"diagnostic.displayByAle": true,
+    "suggest.echodocSupport": true,
+    "codeLens.enable": true,
+	"languageserver": {
+		"golang": {
+			"command": "~/go/bin/gopls",
+			"rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+			"filetypes": ["go"]
+		},
+
+		"clangd": {
+			"command": "clangd",
+			"rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+			"filetypes": ["c", "cpp", "objc", "objcpp"]
+		},
+
+		"haskell": {
+			"command": "hie-wrapper",
+			"rootPatterns": [
+				".stack.yaml",
+				"cabal.config",
+				"package.yaml"
+			],
+
+			"filetypes": [
+				"hs",
+				"lhs",
+				"haskell"
+			],
+
+			"initializationOptions": {
+				"languageServerHaskell": {
+					"hlintOn": true
+				}
+			}
+		},
+		"elmLS": {
+			"command": "elm-language-server",
+			"filetypes": ["elm"],
+			"rootPatterns": ["elm.json"],
+			"initializationOptions": {
+				"elmPath": "elm", // optional
+				"elmFormatPath": "elm-format", // optional
+				"elmTestPath": "elm-test", // optional
+				"elmAnalyseTrigger": "change" // optional
+			}
+		},
+        "latex": {
+            "command": "/usr/bin/texlab",
+            "ignoredRootPaths": ["~"],
+            "filetypes": ["tex", "bib", "plaintex", "context"]
+        }
+
+	},
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.format.settings.url": "/home/leix/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
+}
