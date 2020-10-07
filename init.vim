@@ -1,264 +1,287 @@
+filetype plugin on
+
+" Set space as map leader
+nnoremap <Space> <Nop>
+let mapleader=" "
+
+" File configuration for nvim
+if !has('nvim')
+    echoerr "not nvim"
+    exit 1
+endif
+
 " Install vim-plug
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
+if empty(stdpath('config') . '/autoload/plug.vim')
     silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " Plugins
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin(stdpath('data') . '/plugged')
 
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/echodoc.vim'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
 
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-apathy'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-ragtag'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-sensible'
+" colorschemes
+Plug 'sainnhe/sonokai'
+"Plug 'nvim-treesitter/nvim-treesitter'
 
-" Async Make
-Plug 'neomake/neomake'
+Plug 'ryanoasis/vim-devicons'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-denite'
-
-Plug 'tmhedberg/matchit'
-
-Plug 'Raimondi/delimitMate'
-
-" Syntax check
+" linters
 Plug 'dense-analysis/ale'
+
+" LSP
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+" Plug 'Shougo/echodoc.vim'
 
-" Language specific
-Plug 'sheerun/vim-polyglot'
-let g:polyglot_disabled = ['latex']
+" go
+" Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+Plug 'sebdah/vim-delve'
+Plug 'arp242/gopher.vim'
+
+" Latex
 Plug 'lervag/vimtex'
-let g:vimtex_compiler_progname = 'nvr'
-let g:vimtex_view_method = 'zathura'
-let g:vimtex_view_use_temp_files = 1
-"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-Plug 'vimwiki/vimwiki'
+" helpers
+" Plug 'jiangmiao/auto-pairs'
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'junegunn/fzf.vim'
+" Plug 'mattn/emmet-vim'
+" Plug 'romainl/vim-qf'
 
-" Theming
+Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 
-Plug 'chriskempson/base16-vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Smooth scrolling and window openings
+" Plug 'psliwka/vim-smoothie'
+" Plug 'camspiers/animate.vim'
 
+" Plug 'scrooloose/nerdtree'
+
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-apathy'
+Plug 'tpope/vim-eunuch'
+
+Plug 'junegunn/vim-easy-align'
+
+" git
 Plug 'airblade/vim-gitgutter'
-Plug 'ryanoasis/vim-devicons', ($TERM == 'xterm-256color')? {} : {'on' : []}
+Plug 'itchyny/vim-gitbranch'
+Plug 'junegunn/gv.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+
 call plug#end()
 
-" Plugin Configuration
+" Colorscheme
+set termguicolors     " enable true colors support
+"
+" Coc lightline config
+let g:lightline = {
+\ 'colorscheme': 'wombat',
+\ 'active': {
+\   'left': [ [ 'mode', 'paste' ],
+\             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+\ },
+\ 'tabline': {
+\   'left': [ ['buffers'] ],
+\   'right': [ ['tabs'] ]
+\ },
+\ 'component_function': {
+\   'cocstatus': 'coc#status'
+\ },
+\ 'component_expand': {
+\   'buffers': 'lightline#bufferline#buffers'
+\ },
+\ 'component_type': {
+\   'buffers': 'tabsel'
+\ },
+\ }
 
-let g:go_fmt_autosave = 0 " Let ALE handle gofmt on save
-let g:go_code_completion_enabled = 0 "Let coc handle it
+let g:sonokai_style = 'atlantis'
+let g:sonokai_enable_italic = 0
+let g:sonokai_disable_italic_comment = 1
 
-" denite option
-source $HOME/.config/nvim/denite.vim
+colorscheme sonokai
 
-let g:ale_linters = {'go': ['gofmt', 'golint', 'govet']}
+" Options
 
-let g:ale_sign_error = ' '
-let g:ale_sign_warning = ' '
+set encoding=utf-8
 
-let g:delimitMate_expand_cr=1
-let g:delimitMate_expand_space=1
+let g:tex_flavor = 'latex'
 
-" let g:UltiSnipsExpandTrigger="<F13>"
-" let g:UltiSnipsJumpForwardTrigger="<F13>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-F13>"
-let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsExpandTrigger="<Nop>"
-let g:UltiSnipsJumpForwardTrigger="<Nop>"
-let g:UltiSnipsJumpBackwardTrigger="<Nop>"
-let g:UltiSnipsSnippetsDir="$HOME/.config/nvim/UltiSnips"
+set showtabline=2
 
-let g:coc_snippet_next = '<F13>'
-let g:coc_snippet_prev = '<S-F13>'
+set cursorline
 
-let g:coc_global_extensions = ['coc-snippets', 'coc-java', 'coc-json', 'coc-tsserver', 'coc-python', 'coc-html', 'coc-css']
+set autoindent
+set smartindent
 
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
+set backspace=indent,eol,start
 
-" Highlight symbol under cursor on CursorHold
+set complete-=i
+set completeopt+=noselect
 
-augroup CocAuGroup
-    autocmd!
-    autocmd CursorHold * silent call CocActionAsync('highlight')
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-    " Update signature help on jump placeholder
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+set hidden
 
+set hlsearch
+set incsearch
 
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+set nobackup
+set noshowmode
 
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+set number
+set ruler
 
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+set scrolloff=10
 
-" let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-            \		'*': [
-            \			'remove_trailing_lines',
-            \			'trim_whitespace'
-            \		],
-            \		'go' : [
-            \			'gofmt',
-            \		],
-            \		'python' : [
-            \			'black',
-            \			'add_blank_lines_for_python_control_statements',
-            \			'reorder-python-imports',
-            \		],
-            \		'elm' : [
-            \			'elm-format'
-            \ 	],
-            \		'java' : [
-            \			'google_java_format'
-            \		]
-            \	}
-let g:ale_java_google_java_format_options = '--aosp --skip-sorting-imports'
+set expandtab
+set shiftwidth=4
+set smarttab
+set softtabstop=4
+set tabstop=4
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#coc#enabled = 1
+set textwidth=80
 
-if &term!~'linux'
-    let g:airline_powerline_fonts = 1
+set title
+
+set updatetime=100
+
+set wildmenu
+set virtualedit=block
+
+set ignorecase smartcase infercase
+set splitbelow
+
+" coc recomended settings
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see coc #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
 endif
 
 " Mappings
 
-let mapleader=" "
-inoremap jk <Esc>
-cnoremap jk <C-c>
+inoremap jk <ESC>
+cnoremap jk <ESC>
 
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
+tnoremap <ESC> <C-\><C-n>
 
-tnoremap <Esc> <C-\><C-n>
+nnoremap <C-j> <C-W><C-j>
+nnoremap <C-k> <C-W><C-k>
+nnoremap <C-l> <C-W><C-l>
+nnoremap <C-h> <C-W><C-h>
+
+nnoremap <silent> <F1> :tabprevious<CR>
+nnoremap <silent> <F2> :bprevious!<CR>
+nnoremap <silent> <F3> :bnext!<CR>
+nnoremap <silent> <F4> :tabnext<CR>
 
 nnoremap Y y$
 
-nnoremap <silent> <F1> :tabprevious<CR>
-nnoremap <silent> <F2> :bp!<CR>
-nnoremap <silent> <F3> :bn!<CR>
-nnoremap <silent> <F4> :tabnext<CR>
+nnoremap n nzzzv
+nnoremap N Nzzzv
 
-nnoremap <F12> mtgg=G`t
-
-inoremap <C-U> <C-G>u<C-U>
-
-" Plugin Maps
-
-nnoremap <C-p> :Denite file/rec -start-filter<CR>
-
-inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <silent><expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-inoremap <silent><expr> <F13> pumvisible() ? coc#_select_confirm()
-            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<F13>"
-
-let g:coc_snippet_next = '<F13>'
-let g:coc_snippet_prev = '<S-F13>'
-
-
-" imap <F13> <Plug>(coc-snippets-expand)
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-nmap <leader>rf <Plug>(coc-refactor)
-
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
-
-" Settings
-set ignorecase smartcase infercase
-
-set title
-
-" coc.nvim recommended settings
-set hidden
-set updatetime=300
-set shortmess+=c
-
-set number
-
-set synmaxcol=200
-
-set noshowmode
-
-set tabstop=4
-set sw=4
-set expandtab
-
-set scrolloff=3
+" Commands
 
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
             \ | wincmd p | diffthis
 
-command! VimConfig edit ~/.config/nvim/init.vim
+command! VimConfig edit $MYVIMRC
 
-" Colorscheme
 
-if &term=~'linux'
-    colorscheme elflord
-else
-    colorscheme base16-gruvbox-dark-medium
-    set termguicolors
-endif
+" Plugin configs
+"
 
-" set default tex flavor to LaTeX
-let g:tex_flavor = "latex"
+" Emmet
+" let g:user_emmet_mode='a'
+" let g:user_emmet_leader_key='<Tab>'
+" let g:user_emmet_settings= {
+"     \ 'javascript.jsx' : {
+"     \ 'extends': 'jsx',
+"     \ },
+" \}
 
-autocmd FileType markdown autocmd BufWritePost <buffer> !pandoc % -o %:r.pdf
+" vim go
+let g:go_fmt_autosave = 0 " Let ALE handle gofmt on save
+let g:go_code_completion_enabled = 0 "Let coc handle it
+let g:go_gopls_enabled = 0 "Disable gopls (let coc handle it)
+
+" let g:go_highlight_structs = 1
+" let g:go_highlight_interfaces = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_functions = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_build_constraints = 1
+" let g:go_highlight_extra_types = 1
+" let g:go_highlight_function_parameters = 1
+" let g:go_highlight_function_calls = 1
+" let g:go_highlight_types = 1
+" let g:go_hightlight_fields = 1
+" let g:go_highlight_generate_tags = 1
+" let g:go_highlight_variable_declarations = 1
+" let g:go_highlight_variable_assignments = 1
+" let g:go_addtags_transform = "snakecase"
+
+" netrw
+let g:netrw_banner = 0     " Hide annoying 'help' banner
+let g:netrw_liststyle = 3  " Use tree view
+let g:netrw_winsize = '30' " Smaller default window size
+
+" load custom configs
+for s:name in ['ale', 'coc', 'denite']
+    execute 'source ' . stdpath('config') . '/' . s:name . '.vim'
+endfor
+
+" vimtex
+
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_view_use_temp_files = 1
+let g:vimtex_compiler_latexmk = {
+    \ 'backend' : 'nvim',
+    \ 'background' : 1,
+    \ 'build_dir' : '',
+    \ 'callback' : 1,
+    \ 'continuous' : 1,
+    \ 'executable' : 'latexmk',
+    \ 'hooks' : [],
+    \ 'options' : [
+    \   '-verbose',
+    \   '-file-line-error',
+    \   '-synctex=1',
+    \   '-shell-escape',
+    \   '-interaction=nonstopmode',
+    \ ],
+    \}
+
+" Disable ultisnips mappings
+let g:UltiSnipsExpandTrigger="<Nop>"
+let g:UltiSnipsJumpForwardTrigger="<Nop>"
+let g:UltiSnipsJumpBackwardTrigger="<Nop>"
