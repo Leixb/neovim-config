@@ -282,9 +282,11 @@ end
 local vars = {
     mapleader                      = ' ';
 
-    sonokai_style                  = 'atlantis';
-    sonokai_enable_italic          = 0;
-    sonokai_disable_italic_comment = 1;
+    sonokai_style                     = 'atlantis';
+    sonokai_enable_italic             = 0;
+    sonokai_disable_italic_comment    = 1;
+    sonokai_better_performance        = 1;
+    sonokai_diagnostic_line_highlight = 1;
 
     -- netrw
 
