@@ -26,12 +26,10 @@ local global_opts = {
     backup        = false,
     writebackup   = false,
 
-    expandtab     = true,
     smarttab      = true,
 
     ignorecase    = true,
     smartcase     = true,
-    infercase     = true,
 
     splitbelow    = true,
     splitright    = true,
@@ -41,6 +39,8 @@ local global_opts = {
     cmdheight     = 2,
 
     updatetime    = 300,
+    ttimeoutlen   = 10,
+    timeoutlen    = 500,
 
     title         = true,
 
@@ -54,6 +54,8 @@ local global_opts = {
 
     virtualedit   = 'block',
     backspace     = 'indent,eol,start',
+
+    shortmess	  = 'atI',
 }
 
 local win_opts = {
@@ -65,6 +67,10 @@ local win_opts = {
 local buf_opts = {
     autoindent  = true,
     smartindent = true,
+
+    infercase     = true,
+
+    expandtab     = true,
 
     shiftwidth  = 4,
     softtabstop = 4,
