@@ -548,18 +548,15 @@ end
 --------------------------------------------------------------------------------
 
 function check_back_space()
-  local pos = vim.api.nvim_win_get_cursor(0)
-  if pos[2] == 0 then return true end
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  if col == 0 then return true end
 
-  local line = vim.api.nvim_get_current_line()
-  local c = string.sub(line, pos[2], pos[2])
-  return vim.regex('^\\s$"'):match_str(c)
+  return vim.regex('^\\s$"'):match_str(string.sub(vim.api.nvim_get_current_line() , col, col))
 end
 
 function show_documentation()
 	if vim.tbl_contains({'vim', 'help'}, vim.bo.filetype) then
-		local cword = vim.fn.expand('<cword>')
-		vim.api.nvim_command('help ' .. cword)
+		vim.api.nvim_command('help ' .. vim.fn.expand('<cword>'))
 	else
 		vim.fn.CocActionAsync('doHover')
 	end
