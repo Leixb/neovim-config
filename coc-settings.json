@@ -34,15 +34,9 @@
                 "elmTestPath": "elm-test",
                 "elmAnalyseTrigger": "change"
             }
-        },
-        "latex": {
-            "command": "/usr/bin/texlab",
-            "ignoredRootPaths": ["~"],
-            "filetypes": ["tex", "bib", "plaintex", "context"]
         }
     },
     "java.errors.incompleteClasspath.severity": "ignore",
-    "java.format.settings.url": "/home/leix/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
     "suggest.completionItemKindLabels": {
         "keyword": "\uf1de",
         "variable": "\ue79b",
