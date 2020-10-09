@@ -280,27 +280,27 @@ end
 --------------------------------------------------------------------------------
 
 local vars = {
-    mapleader                      = ' ';
+    mapleader                      = ' ',
 
-    sonokai_style                     = 'atlantis';
-    sonokai_enable_italic             = 0;
-    sonokai_disable_italic_comment    = 1;
-    sonokai_better_performance        = 1;
-    sonokai_diagnostic_line_highlight = 1;
+    sonokai_style                     = 'atlantis',
+    sonokai_enable_italic             = 0,
+    sonokai_disable_italic_comment    = 1,
+    sonokai_better_performance        = 1,
+    sonokai_diagnostic_line_highlight = 1,
 
     -- netrw
 
-    netrw_banner    = 0;
-    netrw_liststyle = 3;
-    netrw_winsize   = 30;
+    netrw_banner    = 0,
+    netrw_liststyle = 3,
+    netrw_winsize   = 30,
 
     -- vimtex
 
-    tex_flavor = 'latex';
+    tex_flavor = 'latex',
 
-    vimtex_compiler_progname   = 'nvr';
-    vimtex_view_method         = 'zathura';
-    vimtex_view_use_temp_files = 1;
+    vimtex_compiler_progname   = 'nvr',
+    vimtex_view_method         = 'zathura',
+    vimtex_view_use_temp_files = 1,
     vimtex_compiler_latexmk    = {
         backend    = 'nvim',
         background = 1,
@@ -316,13 +316,13 @@ local vars = {
             '-shell-escape',
             '-interaction=nonstopmode',
         },
-    };
+    },
 
     -- UltiSnips
 
-    UltiSnipsExpandTrigger       = '<Nop>';
-    UltiSnipsJumpForwardTrigger  = '<Nop>';
-    UltiSnipsJumpBackwardTrigger = '<Nop>';
+    UltiSnipsExpandTrigger       = '<Nop>',
+    UltiSnipsJumpForwardTrigger  = '<Nop>',
+    UltiSnipsJumpBackwardTrigger = '<Nop>',
 
     -- Lightline
 
