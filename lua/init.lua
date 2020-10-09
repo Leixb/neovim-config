@@ -151,6 +151,15 @@ end
 vim.fn['plug#end']()
 
 --------------------------------------------------------------------------------
+-- Colorscheme
+--------------------------------------------------------------------------------
+
+local theme = 'sonokai'
+local lightline_theme = theme
+
+vim.api.nvim_command('colorscheme ' .. theme)
+
+--------------------------------------------------------------------------------
 -- Mappings
 --------------------------------------------------------------------------------
 
@@ -316,7 +325,7 @@ local vars = {
     -- Lightline
 
     lightline = {
-        colorscheme        = 'wombat',
+        colorscheme        = lightline_theme,
         active             = {
             left           = { { 'mode', 'paste' }, { 'cocstatus', 'readonly', 'filename', 'modified' } }
         },
@@ -389,12 +398,6 @@ for k,v in pairs(vars) do
 	vim.g[k] = v
     -- vim.api.nvim_set_var(k, v)
 end
-
---------------------------------------------------------------------------------
--- Colorscheme
---------------------------------------------------------------------------------
-
-vim.api.nvim_command('colorscheme sonokai')
 
 --------------------------------------------------------------------------------
 -- augroups
