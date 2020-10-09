@@ -35,6 +35,7 @@ local global_opts = {
     splitright    = true,
 
     showmode      = false,
+    ruler         = false,
 
     cmdheight     = 2,
 
@@ -107,8 +108,6 @@ local plugins = {
     'mengelbrecht/lightline-bufferline',
 
     'sainnhe/sonokai',
-
-    'ryanoasis/vim-devicons',
 
     'dense-analysis/ale',
 
