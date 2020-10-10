@@ -127,8 +127,7 @@ local plugins = {
 
     'junegunn/vim-easy-align',
 
-    'airblade/vim-gitgutter',
-    'itchyny/vim-gitbranch',
+    'mhinz/vim-signify',
     'junegunn/gv.vim',
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
@@ -329,20 +328,21 @@ local vars = {
     lightline = {
         colorscheme        = lightline_theme,
         active             = {
-            left           = { { 'mode', 'paste' }, { 'cocstatus', 'readonly', 'filename', 'modified' } }
+            left           = { { 'mode', 'paste' }, { 'gitbranch', 'cocstatus', 'readonly', 'filename', 'modified' } },
         },
         tabline            = {
             left           = { { 'buffers' } },
-            right          = { { 'tabs' } }
+            right          = { { 'tabs' } },
         },
         component_function = {
-            cocstatus      = 'coc#status'
+            cocstatus      = 'coc#status',
+            gitbranch      = 'fugitive#head',
         },
         component_expand   = {
-            buffers        = 'lightline#bufferline#buffers'
+            buffers        = 'lightline#bufferline#buffers',
         },
         component_type     = {
-            buffers        = 'tabsel'
+            buffers        = 'tabsel',
         },
     },
 
