@@ -334,6 +334,9 @@ local vars = {
             left           = { { 'buffers' } },
             right          = { { 'tabs' } },
         },
+        component          = {
+            lineinfo       = "%3l:%-2c/%{line('$')}",
+        },
         component_function = {
             cocstatus      = 'coc#status',
             gitbranch      = 'fugitive#head',
