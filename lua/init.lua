@@ -65,6 +65,8 @@ local win_opts = {
     cursorline = true,
     number     = true,
     signcolumn = 'number',
+    foldmethod = 'expr',
+    foldexpr   = 'nvim_treesitter#foldexpr()',
 }
 
 local buf_opts = {
@@ -109,7 +111,7 @@ local plugins = {
     'itchyny/lightline.vim',
     'mengelbrecht/lightline-bufferline',
 
-    'sainnhe/sonokai',
+    'bluz71/vim-nightfly-guicolors',
 
     'dense-analysis/ale',
 
@@ -117,6 +119,7 @@ local plugins = {
     'nvim-lua/completion-nvim',
     'nvim-lua/diagnostic-nvim',
     'nvim-lua/lsp-status.nvim',
+    'norcalli/nvim-colorizer.lua',
 
     'jiangmiao/auto-pairs',
 
@@ -126,7 +129,7 @@ local plugins = {
     'honza/vim-snippets',
 
     'sebdah/vim-delve',
-    'arp242/gopher.vim',
+    -- 'arp242/gopher.vim',
 
     'lervag/vimtex',
 
@@ -163,7 +166,7 @@ vim.fn['plug#end']()
 -- Colorscheme
 --------------------------------------------------------------------------------
 
-local theme = 'sonokai'
+local theme = 'nightfly'
 local lightline_theme = theme
 
 vim.api.nvim_command('colorscheme ' .. theme)
@@ -258,11 +261,6 @@ end
 --------------------------------------------------------------------------------
 
 local vars = {
-    sonokai_style                     = 'atlantis',
-    sonokai_enable_italic             = 0,
-    sonokai_disable_italic_comment    = 1,
-    sonokai_better_performance        = 1,
-    sonokai_diagnostic_line_highlight = 1,
 
     -- netrw
 
@@ -305,7 +303,7 @@ local vars = {
     lightline = {
         colorscheme        = lightline_theme,
         active             = {
-            left           = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } },
+            left           = { { 'mode', 'paste' }, { 'gitbranch', 'lsp_status', 'readonly', 'filename', 'modified' } },
         },
         tabline            = {
             left           = { { 'buffers' } },
@@ -313,6 +311,7 @@ local vars = {
         },
         component          = {
             lineinfo       = "%3l:%-2c/%{line('$')}",
+            lsp_status     = '%{v:lua.status()}',
         },
         component_function = {
             gitbranch      = 'fugitive#head',
@@ -345,9 +344,6 @@ local vars = {
     ale_disable_lsp              = 1,
 
     completion_enable_snippet    = 'UltiSnips',
-
-    AutoPairsFlyMode             = 1,
-    AutoPairsShortcutBackInsert  = '<M-b>',
 }
 
 for k,v in pairs(vars) do
@@ -521,37 +517,71 @@ require'nvim-treesitter.configs'.setup {
 }
 
 --------------------------------------------------------------------------------
+-- Colorizer
+--------------------------------------------------------------------------------
+
+require'colorizer'.setup()
+
+--------------------------------------------------------------------------------
 -- LSP
 --------------------------------------------------------------------------------
 
-local nvim_lsp = require("nvim_lsp")
-local nvim_diagnostic = require("diagnostic")
+local nvim_lsp = require('nvim_lsp')
+local nvim_diagnostic = require('diagnostic')
 
-local function lsp_attach()
-  nvim_diagnostic.on_attach()
+local lsp_status = require('lsp-status')
+
+lsp_status.config{
+    status_symbol = '',
+}
+
+lsp_status.register_progress()
+
+local function lsp_attach(client)
+    nvim_diagnostic.on_attach()
+    lsp_status.on_attach(client)
 end
 
-nvim_lsp.gopls.setup                  { on_attach = lsp_attach }
-nvim_lsp.html.setup                   { on_attach = lsp_attach }
-nvim_lsp.pyls.setup                   { on_attach = lsp_attach }
-nvim_lsp.r_language_server.setup      { on_attach = lsp_attach }
-nvim_lsp.rls.setup                    { on_attach = lsp_attach }
-
-nvim_lsp.vimls.setup                  { on_attach = lsp_attach }
-nvim_lsp.yamlls.setup                 { on_attach = lsp_attach }
-nvim_lsp.texlab.setup                 { on_attach = lsp_attach }
-
-nvim_lsp.kotlin_language_server.setup { on_attach = lsp_attach }
-nvim_lsp.julials.setup                { on_attach = lsp_attach }
-nvim_lsp.bashls.setup                 { on_attach = lsp_attach }
-nvim_lsp.dockerls.setup               { on_attach = lsp_attach }
-nvim_lsp.cssls.setup                  { on_attach = lsp_attach }
-nvim_lsp.clangd.setup                 { on_attach = lsp_attach }
-nvim_lsp.hls.setup                    { on_attach = lsp_attach }
-nvim_lsp.jsonls.setup                 { on_attach = lsp_attach }
+nvim_lsp.gopls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.html.setup                   { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.pyls.setup                   { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.r_language_server.setup      { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.rls.setup                    { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.vimls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.yamlls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.texlab.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.kotlin_language_server.setup { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.julials.setup                { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.bashls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.dockerls.setup               { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.cssls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.clangd.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.hls.setup                    { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.jsonls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+nvim_lsp.tsserver.setup               { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
 
 nvim_lsp.sumneko_lua.setup{
     on_attach = lsp_attach,
-    cmd = { "/home/leix/.cache/nvim/nvim_lsp/sumneko_lua/lua-language-server/bin/Linux/lua-language-server", "-E",
-            "/home/leix/.cache/nvim/nvim_lsp/sumneko_lua/lua-language-server/main.lua" },
+    settings = {
+        Lua = {
+            runtime = { version = 'LuaJIT', path = vim.split(package.path, ';'), },
+            completion = { keywordSnippet = 'Disable', },
+            diagnostics = { enable = true, globals = {
+                'vim', 'describe', 'it', 'before_each', 'after_each' },
+            },
+            workspace = {
+                library = {
+                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                    [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+                }
+            }
+        }
+    }
 }
+
+function status()
+    if #vim.lsp.buf_get_clients() > 0 then
+        return lsp_status.status()
+    end
+    return ''
+end
