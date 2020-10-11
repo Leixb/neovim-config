@@ -64,7 +64,7 @@ local global_opts = {
 local win_opts = {
     cursorline = true,
     number     = true,
-    signcolumn = 'yes',
+    signcolumn = 'number',
 }
 
 local buf_opts = {
@@ -116,6 +116,7 @@ local plugins = {
     'neovim/nvim-lspconfig',
     'nvim-lua/completion-nvim',
     'nvim-lua/diagnostic-nvim',
+    'nvim-lua/lsp-status.nvim',
 
     'jiangmiao/auto-pairs',
 
@@ -211,7 +212,7 @@ local nmap = {
     ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
 
     ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
-    ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true}},
+    ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
     ['<leader>d']  = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
@@ -368,7 +369,12 @@ local augroups = {
     },
     completion = {
         "BufEnter * lua require'completion'.on_attach()"
-    }
+    },
+    lsp_highlight = {
+        'CursorHold  <buffer> lua vim.lsp.buf.document_highlight()',
+        'CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()',
+        'CursorMoved <buffer> lua vim.lsp.buf.clear_references()',
+    },
 }
 
 for augroup, autocmds in pairs(augroups) do
