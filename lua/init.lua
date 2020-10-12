@@ -56,22 +56,27 @@ local global_opts = {
     virtualedit   = 'block',
     backspace     = 'indent,eol,start',
 
-    shortmess	  = 'atI',
+    shortmess     = 'filnxtToOIc',
+
+    completeopt   = 'menuone,noinsert,noselect',
 }
 
 local win_opts = {
     cursorline = true,
     number     = true,
-    signcolumn = 'yes',
+    signcolumn = 'number',
+    foldmethod = 'expr',
+    foldexpr   = 'nvim_treesitter#foldexpr()',
+    foldenable = false,
 }
 
 local buf_opts = {
     autoindent  = true,
     smartindent = true,
 
-    infercase     = true,
+    infercase   = true,
 
-    expandtab     = true,
+    expandtab   = true,
 
     shiftwidth  = 4,
     softtabstop = 4,
@@ -107,15 +112,27 @@ local plugins = {
     'itchyny/lightline.vim',
     'mengelbrecht/lightline-bufferline',
 
-    'sainnhe/sonokai',
+    'bluz71/vim-nightfly-guicolors',
 
     'dense-analysis/ale',
+
+    'neovim/nvim-lspconfig',
+    'nvim-lua/completion-nvim',
+    'nvim-lua/diagnostic-nvim',
+    'nvim-lua/lsp-status.nvim',
+    'norcalli/nvim-colorizer.lua',
+    'RishabhRD/popfix',
+    'RishabhRD/nvim-lsputils',
+
+    'jiangmiao/auto-pairs',
+
+    'nvim-treesitter/nvim-treesitter',
 
     'SirVer/ultisnips',
     'honza/vim-snippets',
 
     'sebdah/vim-delve',
-    'arp242/gopher.vim',
+    -- 'arp242/gopher.vim',
 
     'lervag/vimtex',
 
@@ -132,7 +149,6 @@ local plugins = {
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
 
-    {'neoclide/coc.nvim', { branch ='release' } },
     {'Shougo/denite.nvim', { ['do'] = ':UpdateRemotePlugins' } },
 }
 
@@ -153,7 +169,7 @@ vim.fn['plug#end']()
 -- Colorscheme
 --------------------------------------------------------------------------------
 
-local theme = 'sonokai'
+local theme = 'nightfly'
 local lightline_theme = theme
 
 vim.api.nvim_command('colorscheme ' .. theme)
@@ -163,19 +179,19 @@ vim.api.nvim_command('colorscheme ' .. theme)
 --------------------------------------------------------------------------------
 
 local nmap = {
-    ['<Space>'] = '',
+    ['<space>'] = {'<leader>', {}},
 
     ['<C-j>'] = '<C-w><C-j>',
     ['<C-k>'] = '<C-w><C-k>',
     ['<C-l>'] = '<C-w><C-l>',
     ['<C-h>'] = '<C-w><C-h>',
 
-    ['<F1>']  = {':tabprevious<CR>', { noremap = true , silent = true }},
-    ['<F2>']  = {':bprevious!<CR>',  { noremap = true , silent = true }},
-    ['<F3>']  = {':bnext!<CR>',      { noremap = true , silent = true }},
-    ['<F4>']  = {':tabnext<CR>',     { noremap = true , silent = true }},
+    ['<F1>']  = {'<cmd>tabprevious<CR>', { noremap = true , silent = true }},
+    ['<F2>']  = {'<cmd>bprevious!<CR>',  { noremap = true , silent = true }},
+    ['<F3>']  = {'<cmd>bnext!<CR>',      { noremap = true , silent = true }},
+    ['<F4>']  = {'<cmd>tabnext<CR>',     { noremap = true , silent = true }},
 
-    ['<F12>'] = {'magg=G`a',         { noremap = true , silent = true }},
+    ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
 
     ['Y'] = 'y$',
 
@@ -184,75 +200,48 @@ local nmap = {
 
 -- Denite mappings
 
-    ['<C-p>'] = ':DeniteProjectDir file/rec<CR>',
-    ['\\']    = ':Denite buffer<CR>',
-    ['<Bs>']  = ':Denite grep:. -no-empty<CR>',
+    ['<C-p>']            = '<cmd>DeniteProjectDir file/rec<CR>',
+    ['<leader><leader>'] = '<cmd>Denite buffer<CR>',
+    ['<Bs>']             = '<cmd>Denite grep:. -no-empty<CR>',
 
--- Coc mappings
+-- LSP mappings
 
-    ['[g']         = {'<Plug>(coc-diagnostic-prev)',         { silent = true }},
-    [']g']         = {'<Plug>(coc-diagnostic-next)',         { silent = true }},
-    ['gd']         = {'<Plug>(coc-definition)',              { silent = true }},
-    ['gy']         = {'<Plug>(coc-type-definition)',         { silent = true }},
-    ['gi']         = {'<Plug>(coc-implementation)',          { silent = true }},
-    ['gr']         = {'<Plug>(coc-references)',              { silent = true }},
+    ['[g']         = {'<cmd>PrevDiagnostic<CR>',                    { silent = true }},
+    [']g']         = {'<cmd>NextDiagnostic<CR>',                    { silent = true }},
+    ['gd']         = {'<cmd>lua vim.lsp.buf.definition()<CR>',      { silent = true }},
+    ['gy']         = {'<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent = true }},
+    ['gi']         = {'<cmd>lua vim.lsp.buf.implementation()<CR>',  { silent = true }},
+    ['gr']         = {'<cmd>lua vim.lsp.buf.references()<CR>',      { silent = true }},
 
-    ['<leader>rn'] = {'<Plug>(coc-rename)',                  {}},
-    ['<leader>f']  = {'<Plug>(coc-format-selected)',         {}},
-    ['<leader>a']  = {'<Plug>(coc-codeaction-selected)',     {}},
+    ['<leader>rn'] = {'<cmd>lua vim.lsp.buf.rename()<CR>',      {}},
+    ['<leader>f']  = {'<cmd>lua vim.lsp.buf.formatting()<CR>',  {}},
+    ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
 
-    ['K']          = {':call v:lua.show_documentation()<CR>', {silent = true, noremap = true}},
+    -- Close location, quickfix and help windows
+    ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    ['<leader>ac'] = {'<Plug>(coc-codeaction)',              {}},
-    ['<leader>qf'] = {'<Plug>(coc-fix-current)',             {}},
+    ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
+    ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
-    ['<C-s>']      = { '<Plug>(coc-range-select)',           {silent = true}},
 
--- Coclist mappings
-
-    ['<leader>d']  = {':<C-u>CocList diagnostics<cr>',       {silent = true, nowait = true, noremap = true}},
-    ['<leader>e']  = {':<C-u>CocList extensions<cr>',        {silent = true, nowait = true, noremap = true}},
-    ['<leader>c']  = {':<C-u>CocList commands<cr>',          {silent = true, nowait = true, noremap = true}},
-    ['<leader>o']  = {':<C-u>CocList outline<cr>',           {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {':<C-u>CocList -I symbols<cr>',        {silent = true, nowait = true, noremap = true}},
-    ['<leader>j']  = {':<C-u>CocNext<CR>',                   {silent = true, nowait = true, noremap = true}},
-    ['<leader>k']  = {':<C-u>CocPrev<CR>',                   {silent = true, nowait = true, noremap = true}},
-    ['<leader>p']  = {':<C-u>CocListResume<CR>',             {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld']  = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
+    ['<leader>d']  = {'<cmd>OpenDiagnostic<CR>',                            {silent = true, nowait = true, noremap = true}},
+    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
+    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
+    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',         {silent = true, nowait = true, noremap = true}},
+    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<cr>',        {silent = true, nowait = true, noremap = true}},
 }
-
-local jExKeymap = [[ pumvisible() ? coc#_select_confirm() : coc#expandableOrJumpable() ? ]] ..
-[[ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" : v:lua.check_back_space() ?]] ..
-[[ "\<F13>" : coc#refresh() ]]
-
-local confirmKeymap = [[pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]]
 
 local imap = {
     ['jk']        = '<ESC>',
-    ['<F13>']     = {jExKeymap,                              {silent = true, noremap = true, expr = true}},
-    ['<S-F13>']   = {'<C-p>',                                {silent = true, noremap = true}},
-    ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"', {silent = true, noremap = true, expr = true}},
-    ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<C-h>"', {silent = true, noremap = true, expr = true}},
-    ['<C-space>'] = {'coc#refresh()',                        {silent = true, noremap = true, expr = true}},
-    ['<CR>']      = {confirmKeymap,                          {silent = true, noremap = true, expr = true}},
+    ['<F13>']       = {'<Plug>(completion_trigger)',             {silent = true}},
+    ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
+    ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
 }
 
-local xmap = {
-    ['if']        = '<Plug>(coc-funcobj-i)',
-    ['af']        = '<Plug>(coc-funcobj-a)',
-    ['ic']        = '<Plug>(coc-classobj-i)',
-    ['ac']        = '<Plug>(coc-classobj-a)',
-    ['<leader>f'] = '<Plug>(coc-format-selected)',
-    ['<leader>a'] = '<Plug>(coc-codeaction-selected)',
-    ['<C-s>']     = {'<Plug>(coc-range-select)', { silent = true }}}
-
-local omap = {
-    ['if']        = '<Plug>(coc-funcobj-i)',
-    ['af']        = '<Plug>(coc-funcobj-a)',
-    ['ic']        = '<Plug>(coc-classobj-i)',
-    ['ac']        = '<Plug>(coc-classobj-a)',
-}
-
-local vmap = { }
+local xmap = {}
+local omap = {}
+local vmap = {}
 
 local tmap = {
     ['<ESC>'] = '<C-\\><C-n>',
@@ -279,13 +268,6 @@ end
 --------------------------------------------------------------------------------
 
 local vars = {
-    mapleader                      = ' ',
-
-    sonokai_style                     = 'atlantis',
-    sonokai_enable_italic             = 0,
-    sonokai_disable_italic_comment    = 1,
-    sonokai_better_performance        = 1,
-    sonokai_diagnostic_line_highlight = 1,
 
     -- netrw
 
@@ -328,7 +310,12 @@ local vars = {
     lightline = {
         colorscheme        = lightline_theme,
         active             = {
-            left           = { { 'mode', 'paste' }, { 'gitbranch', 'cocstatus', 'readonly', 'filename', 'modified' } },
+            left           = { { 'mode', 'paste' },
+                               { 'gitbranch', 'readonly', 'filename', 'modified' } },
+            right          = { { 'lineinfo' },
+                               { 'percent' },
+                               { 'fileformat', 'fileencoding', 'filetype' },
+                               { 'lsp_status' } },
         },
         tabline            = {
             left           = { { 'buffers' } },
@@ -336,9 +323,9 @@ local vars = {
         },
         component          = {
             lineinfo       = "%3l:%-2c/%{line('$')}",
+            lsp_status     = '%{v:lua.status()}%<',
         },
         component_function = {
-            cocstatus      = 'coc#status',
             gitbranch      = 'fugitive#head',
         },
         component_expand   = {
@@ -361,42 +348,18 @@ local vars = {
         o         = {'gofmt', 'goimports'},
     },
     ale_linters = {
-        go = {'staticcheck', 'golangci-lint'},
+        go        = {'staticcheck', 'golangci-lint'},
     },
-    ale_fix_on_save = 1,
-    ale_go_imports_executable = 'gofumports',
+    ale_fix_on_save              = 1,
+    ale_go_imports_executable    = 'gofumports',
     ale_go_golangci_lint_package = 1,
-    ale_disable_lsp = 1,
+    ale_disable_lsp              = 1,
 
-    -- COC
+    completion_enable_snippet    = 'UltiSnips',
 
-    coc_global_extensions = {
-        'coc-clangd',
-        'coc-css',
-        'coc-dictionary',
-        'coc-emoji',
-        'coc-git',
-        'coc-go',
-        'coc-highlight',
-        'coc-html',
-        'coc-java',
-        'coc-json',
-        'coc-lists',
-        'coc-pairs',
-        'coc-prettier',
-        'coc-python',
-        'coc-rls',
-        'coc-snippets',
-        'coc-syntax',
-        'coc-tag',
-        'coc-tsserver',
-        'coc-vimlsp',
-        'coc-vimtex',
-        'coc-word',
-        'coc-yank',
-    },
-    coc_snippet_next = '<F13>',
-    coc_snippet_prev = '<S-F13>',
+    diagnostic_enable_virtual_text = 1,
+    diagnostic_virtual_text_prefix = ' ',
+    diagnostic_insert_delay = 1,
 }
 
 for k,v in pairs(vars) do
@@ -416,14 +379,13 @@ local augroups = {
         'FileType denite call v:lua.denite_window_settings()',
         'FileType denite-filter call v:lua.denite_filter_settings()',
     },
-    coc = {
-        "CompleteDone * if pumvisible() == 0 | pclose | endif",
-        "CursorHold * silent call CocActionAsync('highlight')",
-        "FileType typescript,json setl formatexpr=CocAction('formatSelected')",
-        "User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')",
+    completion = {
+        "BufEnter * lua require'completion'.on_attach()"
     },
-    lightline = {
-        'User CocStatusChange,CocDiagnosticChange call lightline#update()'
+    lsp_highlight = {
+        'CursorHold  <buffer> lua vim.lsp.buf.document_highlight()',
+        'CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()',
+        'CursorMoved <buffer> lua vim.lsp.buf.clear_references()',
     },
 }
 
@@ -443,9 +405,6 @@ end
 local commands = {
     'DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis',
     'VimConfig edit $MYVIMRC',
-    "-nargs=0 Format :call CocAction('format')",
-    "-nargs=? Fold   :call CocAction('fold', <f-args>)",
-    "-nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')",
 }
 
 for _, c in pairs(commands) do
@@ -554,17 +513,108 @@ end
 -- Helper funcitons
 --------------------------------------------------------------------------------
 
-function check_back_space()
-  local col = vim.api.nvim_win_get_cursor(0)[2]
-  if col == 0 then return true end
-
-  return vim.regex('^\\s$"'):match_str(string.sub(vim.api.nvim_get_current_line() , col, col))
-end
-
 function show_documentation()
 	if vim.tbl_contains({'vim', 'help'}, vim.bo.filetype) then
 		vim.api.nvim_command('help ' .. vim.fn.expand('<cword>'))
 	else
-		vim.fn.CocActionAsync('doHover')
+        vim.lsp.buf.hover()
 	end
 end
+
+--------------------------------------------------------------------------------
+-- Tree sitter
+--------------------------------------------------------------------------------
+
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = 'all',
+    highlight = {
+        enable = true,
+    },
+}
+
+--------------------------------------------------------------------------------
+-- Colorizer
+--------------------------------------------------------------------------------
+
+require'colorizer'.setup()
+
+--------------------------------------------------------------------------------
+-- LSP
+--------------------------------------------------------------------------------
+
+local nvim_lsp = require('nvim_lsp')
+local nvim_diagnostic = require('diagnostic')
+
+local lsp_status = require('lsp-status')
+
+lsp_status.config{
+    status_symbol = '',
+}
+
+lsp_status.register_progress()
+
+local function lsp_attach(client)
+    nvim_diagnostic.on_attach()
+    lsp_status.on_attach(client)
+end
+
+local lsp_list = {
+    'bashls',
+    'clangd',
+    'cssls',
+    'dockerls',
+    'gopls',
+    'hls',
+    'html',
+    'jdtls',
+    'jsonls',
+    'julials',
+    'kotlin_language_server',
+    'pyls',
+    'r_language_server',
+    'rls',
+    'texlab',
+    'tsserver',
+    'vimls',
+    'yamlls',
+}
+
+for _,val in pairs(lsp_list) do
+    nvim_lsp[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+end
+
+nvim_lsp.sumneko_lua.setup{
+    on_attach = lsp_attach,
+    settings = {
+        Lua = {
+            runtime = { version = 'LuaJIT', path = vim.split(package.path, ';'), },
+            completion = { keywordSnippet = 'Disable', },
+            diagnostics = { enable = true, globals = {
+                'vim', 'describe', 'it', 'before_each', 'after_each' },
+            },
+            workspace = {
+                library = {
+                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                    [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+                }
+            }
+        }
+    },
+    capabilities = lsp_status.capabilities,
+}
+
+function status()
+    if #vim.lsp.buf_get_clients() > 0 then
+        return lsp_status.status()
+    end
+    return ''
+end
+
+vim.lsp.callbacks['textDocument/codeAction']     = require'lsputil.codeAction'.code_action_handler
+vim.lsp.callbacks['textDocument/references']     = require'lsputil.locations'.references_handler
+vim.lsp.callbacks['textDocument/definition']     = require'lsputil.locations'.definition_handler
+vim.lsp.callbacks['textDocument/declaration']    = require'lsputil.locations'.declaration_handler
+vim.lsp.callbacks['textDocument/typeDefinition'] = require'lsputil.locations'.typeDefinition_handler
+vim.lsp.callbacks['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
+vim.lsp.callbacks['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
+vim.lsp.callbacks['workspace/symbol']            = require'lsputil.symbols'.workspace_handler
