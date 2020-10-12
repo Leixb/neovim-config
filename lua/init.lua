@@ -56,7 +56,7 @@ local global_opts = {
     virtualedit   = 'block',
     backspace     = 'indent,eol,start',
 
-    shortmess	  = 'atIc',
+    shortmess     = 'filnxtToOIc',
 
     completeopt   = 'menuone,noinsert,noselect',
 }
@@ -67,6 +67,7 @@ local win_opts = {
     signcolumn = 'number',
     foldmethod = 'expr',
     foldexpr   = 'nvim_treesitter#foldexpr()',
+    foldenable = false,
 }
 
 local buf_opts = {
@@ -120,6 +121,8 @@ local plugins = {
     'nvim-lua/diagnostic-nvim',
     'nvim-lua/lsp-status.nvim',
     'norcalli/nvim-colorizer.lua',
+    'RishabhRD/popfix',
+    'RishabhRD/nvim-lsputils',
 
     'jiangmiao/auto-pairs',
 
@@ -197,9 +200,9 @@ local nmap = {
 
 -- Denite mappings
 
-    ['<C-p>'] = '<cmd>DeniteProjectDir file/rec<CR>',
-    ['\\']    = '<cmd>Denite buffer<CR>',
-    ['<Bs>']  = '<cmd>Denite grep:. -no-empty<CR>',
+    ['<C-p>']            = '<cmd>DeniteProjectDir file/rec<CR>',
+    ['<leader><leader>'] = '<cmd>Denite buffer<CR>',
+    ['<Bs>']             = '<cmd>Denite grep:. -no-empty<CR>',
 
 -- LSP mappings
 
@@ -214,15 +217,19 @@ local nmap = {
     ['<leader>f']  = {'<cmd>lua vim.lsp.buf.formatting()<CR>',  {}},
     ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
 
+    -- Close location, quickfix and help windows
+    ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
+
     ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
     ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
-    ['<leader>d']  = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
-    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',         {silent = true, nowait = true, noremap = true}},
-    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',         {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',        {silent = true, nowait = true, noremap = true}},
-    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<cr>',       {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld']  = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
+    ['<leader>d']  = {'<cmd>OpenDiagnostic<CR>',                            {silent = true, nowait = true, noremap = true}},
+    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
+    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
+    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',         {silent = true, nowait = true, noremap = true}},
+    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<cr>',        {silent = true, nowait = true, noremap = true}},
 }
 
 local imap = {
@@ -303,7 +310,12 @@ local vars = {
     lightline = {
         colorscheme        = lightline_theme,
         active             = {
-            left           = { { 'mode', 'paste' }, { 'gitbranch', 'lsp_status', 'readonly', 'filename', 'modified' } },
+            left           = { { 'mode', 'paste' },
+                               { 'gitbranch', 'readonly', 'filename', 'modified' } },
+            right          = { { 'lineinfo' },
+                               { 'percent' },
+                               { 'fileformat', 'fileencoding', 'filetype' },
+                               { 'lsp_status' } },
         },
         tabline            = {
             left           = { { 'buffers' } },
@@ -311,7 +323,7 @@ local vars = {
         },
         component          = {
             lineinfo       = "%3l:%-2c/%{line('$')}",
-            lsp_status     = '%{v:lua.status()}',
+            lsp_status     = '%{v:lua.status()}%<',
         },
         component_function = {
             gitbranch      = 'fugitive#head',
@@ -344,6 +356,10 @@ local vars = {
     ale_disable_lsp              = 1,
 
     completion_enable_snippet    = 'UltiSnips',
+
+    diagnostic_enable_virtual_text = 1,
+    diagnostic_virtual_text_prefix = ' ',
+    diagnostic_insert_delay = 1,
 }
 
 for k,v in pairs(vars) do
@@ -542,23 +558,30 @@ local function lsp_attach(client)
     lsp_status.on_attach(client)
 end
 
-nvim_lsp.gopls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.html.setup                   { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.pyls.setup                   { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.r_language_server.setup      { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.rls.setup                    { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.vimls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.yamlls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.texlab.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.kotlin_language_server.setup { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.julials.setup                { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.bashls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.dockerls.setup               { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.cssls.setup                  { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.clangd.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.hls.setup                    { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.jsonls.setup                 { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-nvim_lsp.tsserver.setup               { on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+local lsp_list = {
+    'bashls',
+    'clangd',
+    'cssls',
+    'dockerls',
+    'gopls',
+    'hls',
+    'html',
+    'jdtls',
+    'jsonls',
+    'julials',
+    'kotlin_language_server',
+    'pyls',
+    'r_language_server',
+    'rls',
+    'texlab',
+    'tsserver',
+    'vimls',
+    'yamlls',
+}
+
+for _,val in pairs(lsp_list) do
+    nvim_lsp[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+end
 
 nvim_lsp.sumneko_lua.setup{
     on_attach = lsp_attach,
@@ -576,7 +599,8 @@ nvim_lsp.sumneko_lua.setup{
                 }
             }
         }
-    }
+    },
+    capabilities = lsp_status.capabilities,
 }
 
 function status()
@@ -585,3 +609,12 @@ function status()
     end
     return ''
 end
+
+vim.lsp.callbacks['textDocument/codeAction']     = require'lsputil.codeAction'.code_action_handler
+vim.lsp.callbacks['textDocument/references']     = require'lsputil.locations'.references_handler
+vim.lsp.callbacks['textDocument/definition']     = require'lsputil.locations'.definition_handler
+vim.lsp.callbacks['textDocument/declaration']    = require'lsputil.locations'.declaration_handler
+vim.lsp.callbacks['textDocument/typeDefinition'] = require'lsputil.locations'.typeDefinition_handler
+vim.lsp.callbacks['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
+vim.lsp.callbacks['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
+vim.lsp.callbacks['workspace/symbol']            = require'lsputil.symbols'.workspace_handler
