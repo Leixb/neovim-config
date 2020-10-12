@@ -1,1 +1,1 @@
-lua require('init')
+luafile <sfile>:p:h/init.lua
