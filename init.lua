@@ -120,6 +120,9 @@ local plugins = {
     'nvim-lua/completion-nvim',
     'nvim-lua/diagnostic-nvim',
     'nvim-lua/lsp-status.nvim',
+    'nvim-lua/telescope.nvim',
+    'nvim-lua/plenary.nvim',
+    'nvim-lua/popup.nvim',
     'norcalli/nvim-colorizer.lua',
     'RishabhRD/popfix',
     'RishabhRD/nvim-lsputils',
@@ -148,8 +151,6 @@ local plugins = {
     'junegunn/gv.vim',
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
-
-    {'Shougo/denite.nvim', { ['do'] = ':UpdateRemotePlugins' } },
 }
 
 local path = vim.fn['stdpath']('data') .. '/plugged'
@@ -198,11 +199,11 @@ local nmap = {
     ['n'] = 'nzzzv',
     ['N'] = 'Nzzzv',
 
--- Denite mappings
+-- Telescope mappings
 
-    ['<C-p>']            = '<cmd>DeniteProjectDir file/rec<CR>',
-    ['<leader><leader>'] = '<cmd>Denite buffer<CR>',
-    ['<Bs>']             = '<cmd>Denite grep:. -no-empty<CR>',
+    ['<C-p>']            = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+    ['<leader><leader>'] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
+    ['<Bs>']             = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
 
 -- LSP mappings
 
@@ -375,10 +376,6 @@ local augroups = {
     term = {
         'TermOpen term://* setlocal nonumber',
     },
-    denite = {
-        'FileType denite call v:lua.denite_window_settings()',
-        'FileType denite-filter call v:lua.denite_filter_settings()',
-    },
     completion = {
         "BufEnter * lua require'completion'.on_attach()"
     },
@@ -409,104 +406,6 @@ local commands = {
 
 for _, c in pairs(commands) do
     vim.api.nvim_command('command! ' .. c)
-end
-
-
---------------------------------------------------------------------------------
--- DENITE
---------------------------------------------------------------------------------
-
-vim.fn['denite#custom#var']('file/rec', 'command',  {'rg', '--files', '--glob', '!.git'})
-
-vim.fn['denite#custom#var']('grep', {
-    command        = {'rg'},
-    default_opts   = {'-i', '--vimgrep', '--no-heading'},
-    recursive_opts = {},
-    pattern_opt    = {'--regexp'},
-    separator      = {'--'},
-    final_opts     = {},
-})
-
--- Change ignore_globs
-vim.fn['denite#custom#filter']('matcher/ignore_globs', 'ignore_globs', {
-    '.git/', '.ropeproject/', '__pycache__/', 'venv/', 'images/', '*.min.*', 'img/', 'fonts/'
-})
-
--- Remove date from buffer list
-vim.fn['denite#custom#var']('buffer', 'date_format', '')
-
-local denite_options = {
-    split                       = 'floating',
-    start_filter                = 1,
-    auto_resize                 = 1,
-    source_names                = 'short',
-    prompt                      = 'λ ',
-    winrow                      = 1,
-    vertical_preview            = 1,
-    highlight_matched_char      = 'DiffOrig',
-    highlight_matched_range     = 'Visual',
-    highlight_window_background = 'Visual',
-    highlight_filter_background = 'DiffAdd',
-}
-
-for k,v in pairs(denite_options) do
-    vim.fn['denite#custom#option']('default', k, v)
-end
-
-local denite_mappings = {
-    normal = {
-        ['<CR>']  = 'do_action',
-        ['q']     = 'quit',
-        ['<ESC>'] = 'quit',
-        ['d']     = {'do_action', 'delete'},
-        ['p']     = {'do_action', 'preview'},
-        ['i']     = 'open_filter_buffer',
-        ['<C-o>'] = 'open_filter_buffer',
-        ['<C-t>'] = {'do_action', 'tabopen'},
-        ['<C-v>'] = {'do_action', 'vsplit'},
-        ['<C-h>'] = {'do_action', 'split'},
-        ['.']     = 'toggle_select',
-    },
-    filter = {
-        ['<CR>']  = 'do_action',
-        ['<ESC>'] = 'quit',
-        ['<C-t>'] = {'do_action', 'tabopen'},
-        ['<C-v>'] = {'do_action', 'vsplit'},
-        ['<C-h>'] = {'do_action', 'split'},
-        ['.']     = 'toggle_select',
-    },
-    filter_no_expr = {
-        ['<C-o>'] = '<Plug>(denite_filter_quit)',
-        ['jk']    = '<Plug>(denite_filter_quit)',
-    }
-}
-
-function denite_filter_settings()
-    for k,v in pairs(denite_mappings.filter) do
-        denite_map('i', k, v)
-    end
-    for k,v in pairs(denite_mappings.filter_no_expr) do
-        denite_map_noexpr(k, v)
-    end
-end
-
-function denite_window_settings()
-    for k,v in pairs(denite_mappings.normal) do
-        denite_map('n', k, v)
-    end
-end
-
-function denite_map_noexpr(key, action)
-    vim.api.nvim_buf_set_keymap(0, 'i', key, action, { silent = true })
-end
-
-function denite_map(mode, key, action)
-    if type(action) == 'table' then
-        action = ("denite#do_map('%s', '%s')"):format(action[1], action[2])
-    else
-        action = ("denite#do_map('%s')"):format(action)
-    end
-    vim.api.nvim_buf_set_keymap(0, mode, key, action, { silent = true, expr = true, noremap = true })
 end
 
 --------------------------------------------------------------------------------
@@ -618,3 +517,7 @@ vim.lsp.callbacks['textDocument/typeDefinition'] = require'lsputil.locations'.ty
 vim.lsp.callbacks['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
 vim.lsp.callbacks['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
 vim.lsp.callbacks['workspace/symbol']            = require'lsputil.symbols'.workspace_handler
+
+-- Telescope
+
+require('telescope').setup{}
