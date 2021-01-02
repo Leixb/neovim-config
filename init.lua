@@ -15,6 +15,7 @@ else
 	f:close()
 end
 
+
 --------------------------------------------------------------------------------
 -- Options
 --------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ local global_opts = {
     hlsearch      = true,
     incsearch     = true,
 
-    virtualedit   = 'block',
+    -- virtualedit   = 'block',
     backspace     = 'indent,eol,start',
 
     shortmess     = 'filnxtToOIc',
@@ -135,9 +136,10 @@ local plugins = {
     'honza/vim-snippets',
 
     'sebdah/vim-delve',
-    -- 'arp242/gopher.vim',
+    'arp242/gopher.vim',
 
     'lervag/vimtex',
+    'dart-lang/dart-vim-plugin',
 
     'tpope/vim-commentary',
     'tpope/vim-surround',
@@ -179,8 +181,10 @@ vim.api.nvim_command('colorscheme ' .. theme)
 -- Mappings
 --------------------------------------------------------------------------------
 
+vim.api.nvim_command('let mapleader=" "')
+
 local nmap = {
-    ['<space>'] = {'<leader>', {}},
+    ['<space>'] = '<NOP>',
 
     ['<C-j>'] = '<C-w><C-j>',
     ['<C-k>'] = '<C-w><C-k>',
@@ -199,9 +203,12 @@ local nmap = {
     ['n'] = 'nzzzv',
     ['N'] = 'Nzzzv',
 
+    ['<leader>m'] = {'<cmd>Make<CR>', { noremap = true , silent = true }},
+
 -- Telescope mappings
 
-    ['<C-p>']            = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+    ['<C-S-p>']          = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+    ['<C-p>']            = "<cmd>lua require('telescope.builtin').fd()<CR>",
     ['<leader><leader>'] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
     ['<Bs>']             = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
 
@@ -231,6 +238,13 @@ local nmap = {
     ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
     ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',         {silent = true, nowait = true, noremap = true}},
     ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<cr>',        {silent = true, nowait = true, noremap = true}},
+
+    -- gopher
+    ['<leader>ge'] = '<Plug>(gopher-error)',
+    ['<leader>gi'] = '<Plug>(gopher-if)',
+    ['<leader>gm'] = '<Plug>(gopher-implement)',
+    ['<leader>gr'] = '<Plug>(gopher-return)',
+    ['<leader>gf'] = '<Plug>(gopher-fillstruct)',
 }
 
 local imap = {
@@ -238,6 +252,12 @@ local imap = {
     ['<F13>']       = {'<Plug>(completion_trigger)',             {silent = true}},
     ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
     ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
+
+    ['<C-k>e'] = '<Plug>(gopher-error)',
+    ['<C-k>i'] = '<Plug>(gopher-if)',
+    ['<C-k>m'] = '<Plug>(gopher-implement)',
+    ['<C-k>r'] = '<Plug>(gopher-return)',
+    ['<C-k>f'] = '<Plug>(gopher-fillstruct)',
 }
 
 local xmap = {}
@@ -299,6 +319,18 @@ local vars = {
             '-interaction=nonstopmode',
         },
     },
+    vimtex_compiler_method          = 'latexmk',
+    vimtex_compiler_engine          = 'lualatex',
+    vimtex_compiler_latexmk_engines = {
+        _                           = '-lualatex', -- default to lualatex
+        pdflatex                    = '-pdf',
+        dvipdfex                    = '-pdfdvi',
+        lualatex                    = '-lualatex',
+        xelatex                     = '-xelatex',
+        ['context (pdftex)']        = '-pdf -pdflatex=texexec',
+        ['context (luatex)']        = '-pdf -pdflatex=context',
+        ['context (xetex)']         = "-pdf -pdflatex=''texexec --xtx''",
+    },
 
     -- UltiSnips
 
@@ -340,14 +372,18 @@ local vars = {
     -- ALE
 
     ale_fixers = {
-        ['*']     = {'remove_trailing_lines', 'trim_whitespace'},
-        cs        = {'prettier', 'stylelint'},
-        jvascript = {'eslint', 'prettier'},
-        pthon     = {'isort', 'black'},
-        HML       = {'HTMLHint', 'proselint'},
-        rby       = {'rubocop'},
-        o         = {'gofmt', 'goimports'},
+        ['*']      = {'remove_trailing_lines', 'trim_whitespace'},
+        css        = {'prettier', 'stylelint'},
+        javascript = {'eslint', 'prettier'},
+        python     = {'isort', 'black'},
+        HTML       = {'HTMLHint', 'proselint'},
+        ruby       = {'rubocop'},
+        go         = {'gofmt', 'goimports'},
+        dart       = {'dartfmt'},
+        r          = {'styler'},
     },
+    ale_linters_explicit = 1,
+    ale_lint_delay = 1000,
     ale_linters = {
         go        = {'staticcheck', 'golangci-lint'},
     },
@@ -361,6 +397,8 @@ local vars = {
     diagnostic_enable_virtual_text = 1,
     diagnostic_virtual_text_prefix = ' ',
     diagnostic_insert_delay = 1,
+
+    gopher_map = 0, -- diable gopher default mappings
 }
 
 for k,v in pairs(vars) do
@@ -375,14 +413,18 @@ end
 local augroups = {
     term = {
         'TermOpen term://* setlocal nonumber',
+        'TermOpen * startinsert',
     },
     completion = {
-        "BufEnter * lua require'completion'.on_attach()"
+        "BufEnter * lua require'completion'.on_attach()",
     },
     lsp_highlight = {
         'CursorHold  <buffer> lua vim.lsp.buf.document_highlight()',
         'CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()',
         'CursorMoved <buffer> lua vim.lsp.buf.clear_references()',
+    },
+    ale =  {
+        "BufEnter tex let b:ale_lint_on_text_changed=0",
     },
 }
 
@@ -402,6 +444,9 @@ end
 local commands = {
     'DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis',
     'VimConfig edit $MYVIMRC',
+    "Make silent lua require'async_make'.make()",
+    '-nargs=* T  split  | terminal <args>',
+    '-nargs=* VT vsplit | terminal <args>',
 }
 
 for _, c in pairs(commands) do
@@ -441,7 +486,7 @@ require'colorizer'.setup()
 -- LSP
 --------------------------------------------------------------------------------
 
-local nvim_lsp = require('nvim_lsp')
+local lspconfig = require('lspconfig')
 local nvim_diagnostic = require('diagnostic')
 
 local lsp_status = require('lsp-status')
@@ -458,31 +503,34 @@ local function lsp_attach(client)
 end
 
 local lsp_list = {
-    'bashls',
+    -- 'bashls', -- high CPU usage...
     'clangd',
     'cssls',
+    'dartls',
     'dockerls',
     'gopls',
-    'hls',
+    -- 'hls',
     'html',
     'jdtls',
     'jsonls',
     'julials',
-    'kotlin_language_server',
+    -- 'kotlin_language_server',
     'pyls',
     'r_language_server',
     'rls',
-    'texlab',
+    -- 'texlab', -- diagnostic blocks with vimtex.
     'tsserver',
     'vimls',
     'yamlls',
 }
 
 for _,val in pairs(lsp_list) do
-    nvim_lsp[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+    lspconfig[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
 end
 
-nvim_lsp.sumneko_lua.setup{
+lspconfig.texlab.setup{} -- no diagnostic attach cause it causes problems
+
+lspconfig.sumneko_lua.setup{
     on_attach = lsp_attach,
     settings = {
         Lua = {
@@ -520,4 +568,16 @@ vim.lsp.callbacks['workspace/symbol']            = require'lsputil.symbols'.work
 
 -- Telescope
 
-require('telescope').setup{}
+local actions = require('telescope.actions')
+
+require('telescope').setup {
+    defaults = {
+        mappings = {
+            i = {
+                ["<c-k>"] = actions.move_selection_previous,
+                ["<c-j>"] = actions.move_selection_next,
+                ["<c-d>"] = actions.close,
+            },
+        },
+    }
+}
