@@ -119,7 +119,6 @@ local plugins = {
 
     'neovim/nvim-lspconfig',
     'nvim-lua/completion-nvim',
-    'nvim-lua/diagnostic-nvim',
     'nvim-lua/lsp-status.nvim',
     'nvim-lua/telescope.nvim',
     'nvim-lua/plenary.nvim',
@@ -214,8 +213,8 @@ local nmap = {
 
 -- LSP mappings
 
-    ['[g']         = {'<cmd>PrevDiagnostic<CR>',                    { silent = true }},
-    [']g']         = {'<cmd>NextDiagnostic<CR>',                    { silent = true }},
+    ['[g']         = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', { silent = true }},
+    [']g']         = {'<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', { silent = true }},
     ['gd']         = {'<cmd>lua vim.lsp.buf.definition()<CR>',      { silent = true }},
     ['gy']         = {'<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent = true }},
     ['gi']         = {'<cmd>lua vim.lsp.buf.implementation()<CR>',  { silent = true }},
@@ -232,8 +231,8 @@ local nmap = {
     ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
-    ['<leader>ld']  = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
-    ['<leader>d']  = {'<cmd>OpenDiagnostic<CR>',                            {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld'] = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
+    ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',      {silent = true, nowait = true, noremap = true}},
     ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
     ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
     ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',         {silent = true, nowait = true, noremap = true}},
@@ -487,7 +486,6 @@ require'colorizer'.setup()
 --------------------------------------------------------------------------------
 
 local lspconfig = require('lspconfig')
-local nvim_diagnostic = require('diagnostic')
 
 local lsp_status = require('lsp-status')
 
@@ -498,7 +496,6 @@ lsp_status.config{
 lsp_status.register_progress()
 
 local function lsp_attach(client)
-    nvim_diagnostic.on_attach()
     lsp_status.on_attach(client)
 end
 
@@ -518,7 +515,7 @@ local lsp_list = {
     'pyls',
     'r_language_server',
     'rls',
-    -- 'texlab', -- diagnostic blocks with vimtex.
+    'texlab',
     'tsserver',
     'vimls',
     'yamlls',
@@ -528,9 +525,22 @@ for _,val in pairs(lsp_list) do
     lspconfig[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
 end
 
-lspconfig.texlab.setup{} -- no diagnostic attach cause it causes problems
+local system_name
+if vim.fn.has("mac") == 1 then
+  system_name = "macOS"
+elseif vim.fn.has("unix") == 1 then
+  system_name = "Linux"
+elseif vim.fn.has('win32') == 1 then
+  system_name = "Windows"
+else
+  print("Unsupported system for sumneko")
+end
+
+local sumneko_root_path = vim.fn.stdpath('cache')..'/nvim_lsp/sumneko_lua/lua-language-server'
+local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
 
 lspconfig.sumneko_lua.setup{
+    cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
     on_attach = lsp_attach,
     settings = {
         Lua = {
@@ -565,6 +575,33 @@ vim.lsp.callbacks['textDocument/typeDefinition'] = require'lsputil.locations'.ty
 vim.lsp.callbacks['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
 vim.lsp.callbacks['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
 vim.lsp.callbacks['workspace/symbol']            = require'lsputil.symbols'.workspace_handler
+
+-- Diagnostics
+
+vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        -- Enable underline, use default values
+        underline = true,
+        -- Enable virtual text, override spacing to 4
+        virtual_text = {
+            spacing = 4,
+            prefix = '~',
+        },
+        -- Use a function to dynamically turn signs off
+        -- and on, using buffer local variables
+        signs = function(bufnr, client_id)
+            local ok, result = pcall(vim.api.nvim_buf_get_var, bufnr, 'show_signs')
+            -- No buffer local variable set, so just enable by default
+            if not ok then
+                return true
+            end
+
+            return result
+        end,
+        -- Disable a feature
+        update_in_insert = false,
+    }
+)
 
 -- Telescope
 
