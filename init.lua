@@ -418,9 +418,9 @@ local augroups = {
         "BufEnter * lua require'completion'.on_attach()",
     },
     lsp_highlight = {
-        'CursorHold  <buffer> lua vim.lsp.buf.document_highlight()',
-        'CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()',
-        'CursorMoved <buffer> lua vim.lsp.buf.clear_references()',
+        'CursorHold  <buffer> silent! lua vim.lsp.buf.document_highlight()',
+        'CursorHoldI <buffer> silent! lua vim.lsp.buf.document_highlight()',
+        'CursorMoved <buffer> silent! lua vim.lsp.buf.clear_references()',
     },
     ale =  {
         "BufEnter tex let b:ale_lint_on_text_changed=0",
