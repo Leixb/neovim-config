@@ -152,6 +152,8 @@ local plugins = {
     'junegunn/gv.vim',
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
+
+    'editorconfig/editorconfig-vim',
 }
 
 local path = vim.fn['stdpath']('data') .. '/plugged'
@@ -398,6 +400,8 @@ local vars = {
     diagnostic_insert_delay = 1,
 
     gopher_map = 0, -- diable gopher default mappings
+
+    EditorConfig_exclude_patterns = {'fugitive://.*'},
 }
 
 for k,v in pairs(vars) do
