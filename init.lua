@@ -529,6 +529,13 @@ for _,val in pairs(lsp_list) do
     lspconfig[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
 end
 
+local probeLoc = vim.fn.system('npm root -g')
+lspconfig.angularls.setup{
+  on_attach = lsp_attach,
+  capabilities = lsp_status.capabilities,
+  cmd = {"ngserver", "--stdio", "--tsProbeLocations", probeLoc , "--ngProbeLocations", probeLoc},
+}
+
 local system_name
 if vim.fn.has("mac") == 1 then
   system_name = "macOS"
