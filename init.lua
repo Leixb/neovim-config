@@ -357,7 +357,7 @@ local vars = {
         },
         component          = {
             lineinfo       = "%3l:%-2c/%{line('$')}",
-            lsp_status     = '%{v:lua.status()}%<',
+            lsp_status     = '%{v:lua.Status()}%<',
         },
         component_function = {
             gitbranch      = 'fugitive#head',
@@ -571,7 +571,7 @@ lspconfig.sumneko_lua.setup{
     capabilities = lsp_status.capabilities,
 }
 
-function status()
+function Status()
     if #vim.lsp.buf_get_clients() > 0 then
         return lsp_status.status()
     end
@@ -600,7 +600,7 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
         },
         -- Use a function to dynamically turn signs off
         -- and on, using buffer local variables
-        signs = function(bufnr, client_id)
+        signs = function(bufnr, _)
             local ok, result = pcall(vim.api.nvim_buf_get_var, bufnr, 'show_signs')
             -- No buffer local variable set, so just enable by default
             if not ok then
