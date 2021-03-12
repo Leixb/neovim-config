@@ -84,6 +84,8 @@ local buf_opts = {
     tabstop     = 4,
 
     textwidth   = 80,
+
+    omnifunc    = 'v:lua.vim.lsp.omnifunc',
 }
 
 for k, v in pairs(global_opts) do
@@ -127,18 +129,19 @@ local plugins = {
     'RishabhRD/popfix',
     'RishabhRD/nvim-lsputils',
 
+    'norcalli/snippets.nvim',
+
     'jiangmiao/auto-pairs',
 
     'nvim-treesitter/nvim-treesitter',
-
-    'SirVer/ultisnips',
-    'honza/vim-snippets',
 
     'sebdah/vim-delve',
     'arp242/gopher.vim',
 
     'lervag/vimtex',
     'dart-lang/dart-vim-plugin',
+    'JuliaEditorSupport/julia-vim',
+    'dag/vim-fish',
 
     'tpope/vim-commentary',
     'tpope/vim-surround',
@@ -233,12 +236,12 @@ local nmap = {
     ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
-    ['<leader>ld'] = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld'] = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>',  {silent = true, nowait = true, noremap = true}},
     ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',      {silent = true, nowait = true, noremap = true}},
     ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
     ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<cr>',         {silent = true, nowait = true, noremap = true}},
-    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<cr>',        {silent = true, nowait = true, noremap = true}},
+    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<CR>',         {silent = true, nowait = true, noremap = true}},
+    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',        {silent = true, nowait = true, noremap = true}},
 
     -- gopher
     ['<leader>ge'] = '<Plug>(gopher-error)',
@@ -250,9 +253,15 @@ local nmap = {
 
 local imap = {
     ['jk']        = '<ESC>',
-    ['<F13>']       = {'<Plug>(completion_trigger)',             {silent = true}},
+    ['<F13>']     = {'<Plug>(completion_smart_tab)',             {silent = true}},
+    ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
+    ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
+
     ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
     ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
+
+    ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
+
 
     ['<C-k>e'] = '<Plug>(gopher-error)',
     ['<C-k>i'] = '<Plug>(gopher-if)',
@@ -335,9 +344,16 @@ local vars = {
 
     -- UltiSnips
 
-    UltiSnipsExpandTrigger       = '<Nop>',
-    UltiSnipsJumpForwardTrigger  = '<Nop>',
-    UltiSnipsJumpBackwardTrigger = '<Nop>',
+    -- UltiSnipsExpandTrigger       = '<nop>',
+    -- UltiSnipsJumpForwardTrigger  = '<nop>',
+    -- UltiSnipsJumpBackwardTrigger = '<nop>',
+
+    -- VSnip
+
+    vsnip_filetypes = {
+        javascriptreact = {'javascript'},
+        typescriptreact = {'typescript'},
+    },
 
     -- Lightline
 
@@ -357,7 +373,7 @@ local vars = {
         },
         component          = {
             lineinfo       = "%3l:%-2c/%{line('$')}",
-            lsp_status     = '%{v:lua.Status()}%<',
+            lsp_status     = '%{v:lua.status()}%<',
         },
         component_function = {
             gitbranch      = 'fugitive#head',
@@ -393,13 +409,22 @@ local vars = {
     ale_go_golangci_lint_package = 1,
     ale_disable_lsp              = 1,
 
-    completion_enable_snippet    = 'UltiSnips',
+    -- completion nvim
+
+    completion_enable_snippet    = 'vim-vsnip',
+    completion_enable_auto_paren = 1,
+
+    -- diagnostic
 
     diagnostic_enable_virtual_text = 1,
     diagnostic_virtual_text_prefix = ' ',
     diagnostic_insert_delay = 1,
 
+    -- gopher
+
     gopher_map = 0, -- diable gopher default mappings
+
+    -- editor config
 
     EditorConfig_exclude_patterns = {'fugitive://.*'},
 }
@@ -412,6 +437,7 @@ end
 --------------------------------------------------------------------------------
 -- augroups
 --------------------------------------------------------------------------------
+
 
 local augroups = {
     term = {
@@ -428,6 +454,9 @@ local augroups = {
     },
     ale =  {
         "BufEnter tex let b:ale_lint_on_text_changed=0",
+    },
+    highlight_on_yank = {
+        'TextYankPost * silent! lua vim.highlight.on_yank()',
     },
 }
 
@@ -460,7 +489,7 @@ end
 -- Helper funcitons
 --------------------------------------------------------------------------------
 
-function show_documentation()
+function _G.show_documentation()
 	if vim.tbl_contains({'vim', 'help'}, vim.bo.filetype) then
 		vim.api.nvim_command('help ' .. vim.fn.expand('<cword>'))
 	else
@@ -629,3 +658,7 @@ require('telescope').setup {
         },
     }
 }
+
+-- Snippets
+
+require'snippets'.use_suggested_mappings()
