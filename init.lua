@@ -20,7 +20,7 @@ end
 -- Options
 --------------------------------------------------------------------------------
 
-local global_opts = {
+local opts = {
     encoding      = 'utf-8',
     termguicolors = true,
 
@@ -47,6 +47,7 @@ local global_opts = {
     title         = true,
 
     wildmenu      = true,
+    wildignore    = {'*.o', '*.a', '__pycache__'},
     hidden        = true,
     scrolloff     = 10,
     showtabline   = 2,
@@ -55,56 +56,38 @@ local global_opts = {
     incsearch     = true,
 
     -- virtualedit   = 'block',
-    backspace     = 'indent,eol,start',
+    backspace     = {'indent', 'eol', 'start'},
 
     shortmess     = 'filnxtToOIc',
 
-    completeopt   = 'menuone,noinsert,noselect',
+    completeopt   = {'menuone', 'noinsert', 'noselect'},
+
+    cursorline    = true,
+    number        = true,
+    signcolumn    = 'yes',
+    foldmethod    = 'expr',
+    foldexpr      = 'nvim_treesitter#foldexpr()',
+    foldenable    = false,
+
+    autoindent    = true,
+    smartindent   = true,
+
+    infercase     = true,
+
+    expandtab     = true,
+
+    shiftwidth    = 4,
+    softtabstop   = 4,
+    tabstop       = 4,
+
+    textwidth     = 80,
+    wrap          = false,
+
+    omnifunc      = 'v:lua.vim.lsp.omnifunc',
 }
 
-local win_opts = {
-    cursorline = true,
-    number     = true,
-    signcolumn = 'number',
-    foldmethod = 'expr',
-    foldexpr   = 'nvim_treesitter#foldexpr()',
-    foldenable = false,
-}
-
-local buf_opts = {
-    autoindent  = true,
-    smartindent = true,
-
-    infercase   = true,
-
-    expandtab   = true,
-
-    shiftwidth  = 4,
-    softtabstop = 4,
-    tabstop     = 4,
-
-    textwidth   = 80,
-
-    omnifunc    = 'v:lua.vim.lsp.omnifunc',
-}
-
-for k, v in pairs(global_opts) do
-	vim.o[k] = v
-    -- vim.api.nvim_set_option(k, v)
-end
-
-for k, v in pairs(buf_opts) do
-	vim.o[k] = v
-	vim.bo[k] = v
-    -- vim.api.nvim_set_option(k, v)
-    -- vim.api.nvim_buf_set_option(0, k, v)
-end
-
-for k, v in pairs(win_opts) do
-	vim.o[k] = v
-	vim.wo[k] = v
-    -- vim.api.nvim_set_option(k, v)
-    -- vim.api.nvim_win_set_option(0, k, v)
+for k, v in pairs(opts) do
+	vim.opt[k] = v
 end
 
 --------------------------------------------------------------------------------
@@ -129,6 +112,7 @@ local plugins = {
     'RishabhRD/popfix',
     'RishabhRD/nvim-lsputils',
 
+    'hrsh7th/vim-vsnip',
     'norcalli/snippets.nvim',
 
     'jiangmiao/auto-pairs',
