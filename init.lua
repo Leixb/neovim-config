@@ -1,20 +1,13 @@
 --------------------------------------------------------------------------------
--- Check if Plug is installed and download it if not
+-- Bootstrap packer
 --------------------------------------------------------------------------------
 
-local vim_plug_install_path = vim.fn['stdpath']('config') .. '/autoload/plug.vim'
+local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 
-local f = io.open(vim_plug_install_path, 'r')
-if f == nil then
-    os.execute(('curl -fLo %s --create-dirs %s'):format(
-		vim_plug_install_path,
-		'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	))
-    vim.api.nvim_command('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
-else
-	f:close()
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  vim.fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  vim.api.nvim_command 'packadd packer.nvim'
 end
-
 
 --------------------------------------------------------------------------------
 -- Options
@@ -81,7 +74,8 @@ local opts = {
     tabstop       = 4,
 
     textwidth     = 80,
-    wrap          = false,
+    wrap          = true,
+    formatoptions = "jcroql",
 
     omnifunc      = 'v:lua.vim.lsp.omnifunc',
 }
@@ -94,67 +88,7 @@ end
 -- Plugins
 --------------------------------------------------------------------------------
 
-local plugins = {
-    'itchyny/lightline.vim',
-    'mengelbrecht/lightline-bufferline',
-
-    'bluz71/vim-nightfly-guicolors',
-
-    'dense-analysis/ale',
-
-    'neovim/nvim-lspconfig',
-    'nvim-lua/completion-nvim',
-    'nvim-lua/lsp-status.nvim',
-    'nvim-lua/telescope.nvim',
-    'nvim-lua/plenary.nvim',
-    'nvim-lua/popup.nvim',
-    'norcalli/nvim-colorizer.lua',
-    'RishabhRD/popfix',
-    'RishabhRD/nvim-lsputils',
-
-    'hrsh7th/vim-vsnip',
-    'norcalli/snippets.nvim',
-
-    'jiangmiao/auto-pairs',
-
-    'nvim-treesitter/nvim-treesitter',
-
-    'sebdah/vim-delve',
-    'arp242/gopher.vim',
-
-    'lervag/vimtex',
-    'dart-lang/dart-vim-plugin',
-    'JuliaEditorSupport/julia-vim',
-    'dag/vim-fish',
-
-    'tpope/vim-commentary',
-    'tpope/vim-surround',
-    'tpope/vim-repeat',
-    'tpope/vim-apathy',
-    'tpope/vim-eunuch',
-
-    'junegunn/vim-easy-align',
-
-    'mhinz/vim-signify',
-    'junegunn/gv.vim',
-    'tpope/vim-fugitive',
-    'tpope/vim-rhubarb',
-
-    'editorconfig/editorconfig-vim',
-}
-
-local path = vim.fn['stdpath']('data') .. '/plugged'
-vim.fn['plug#begin'](path)
-
-for _,p in pairs(plugins) do
-    if type(p) == 'table' then
-        vim.fn['plug#'](unpack(p))
-    else
-        vim.fn['plug#'](p)
-    end
-end
-
-vim.fn['plug#end']()
+require('plugins')
 
 --------------------------------------------------------------------------------
 -- Colorscheme
@@ -220,19 +154,19 @@ local nmap = {
     ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
-    ['<leader>ld'] = {'<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>',  {silent = true, nowait = true, noremap = true}},
-    ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',      {silent = true, nowait = true, noremap = true}},
-    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
-    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',          {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<CR>',         {silent = true, nowait = true, noremap = true}},
-    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',        {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld'] = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',  {silent = true, nowait = true, noremap = true}},
+    ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',            {silent = true, nowait = true, noremap = true}},
+    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',                {silent = true, nowait = true, noremap = true}},
+    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',                {silent = true, nowait = true, noremap = true}},
+    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<CR>',               {silent = true, nowait = true, noremap = true}},
+    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',              {silent = true, nowait = true, noremap = true}},
 
     -- gopher
-    ['<leader>ge'] = '<Plug>(gopher-error)',
-    ['<leader>gi'] = '<Plug>(gopher-if)',
-    ['<leader>gm'] = '<Plug>(gopher-implement)',
-    ['<leader>gr'] = '<Plug>(gopher-return)',
-    ['<leader>gf'] = '<Plug>(gopher-fillstruct)',
+    -- ['<leader>ge'] = '<Plug>(gopher-error)',
+    -- ['<leader>gi'] = '<Plug>(gopher-if)',
+    -- ['<leader>gm'] = '<Plug>(gopher-implement)',
+    -- ['<leader>gr'] = '<Plug>(gopher-return)',
+    -- ['<leader>gf'] = '<Plug>(gopher-fillstruct)',
 }
 
 local imap = {
@@ -247,11 +181,11 @@ local imap = {
     ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 
 
-    ['<C-k>e'] = '<Plug>(gopher-error)',
-    ['<C-k>i'] = '<Plug>(gopher-if)',
-    ['<C-k>m'] = '<Plug>(gopher-implement)',
-    ['<C-k>r'] = '<Plug>(gopher-return)',
-    ['<C-k>f'] = '<Plug>(gopher-fillstruct)',
+    -- ['<C-k>e'] = '<Plug>(gopher-error)',
+    -- ['<C-k>i'] = '<Plug>(gopher-if)',
+    -- ['<C-k>m'] = '<Plug>(gopher-implement)',
+    -- ['<C-k>r'] = '<Plug>(gopher-return)',
+    -- ['<C-k>f'] = '<Plug>(gopher-fillstruct)',
 }
 
 local xmap = {}
@@ -386,9 +320,13 @@ local vars = {
     ale_linters_explicit = 1,
     ale_lint_delay = 1000,
     ale_linters = {
-        go        = {'staticcheck', 'golangci-lint'},
+        go         = {'staticcheck', 'golangci-lint'},
+        python     = {'mypy', 'pylint'},
     },
     ale_fix_on_save              = 1,
+    ale_fix_on_save_ignore       = {
+        julia      = {'remove_trailing_lines', 'trim_whitespace'},
+    },
     ale_go_imports_executable    = 'gofumports',
     ale_go_golangci_lint_package = 1,
     ale_disable_lsp              = 1,
@@ -406,7 +344,7 @@ local vars = {
 
     -- gopher
 
-    gopher_map = 0, -- diable gopher default mappings
+    -- gopher_map = 0, -- diable gopher default mappings
 
     -- editor config
 
@@ -424,6 +362,9 @@ end
 
 
 local augroups = {
+    packer_compile = {
+        'BufWritePost plugins.lua PackerCompile',
+    },
     term = {
         'TermOpen term://* setlocal nonumber',
         'TermOpen * startinsert',
@@ -441,6 +382,12 @@ local augroups = {
     },
     highlight_on_yank = {
         'TextYankPost * silent! lua vim.highlight.on_yank()',
+    },
+    spell_check = {
+        'FileType markdown,gitcommit,latex,text,tex setlocal spell',
+    },
+    spell_check_journal_lang = {
+        'BufRead,BufNewFile,BufEnter */journal/* setlocal spelllang=ca',
     },
 }
 
@@ -481,125 +428,6 @@ function _G.show_documentation()
 	end
 end
 
---------------------------------------------------------------------------------
--- Tree sitter
---------------------------------------------------------------------------------
-
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = 'all',
-    highlight = {
-        enable = true,
-    },
-}
-
---------------------------------------------------------------------------------
--- Colorizer
---------------------------------------------------------------------------------
-
-require'colorizer'.setup()
-
---------------------------------------------------------------------------------
--- LSP
---------------------------------------------------------------------------------
-
-local lspconfig = require('lspconfig')
-
-local lsp_status = require('lsp-status')
-
-lsp_status.config{
-    status_symbol = '',
-}
-
-lsp_status.register_progress()
-
-local function lsp_attach(client)
-    lsp_status.on_attach(client)
-end
-
-local lsp_list = {
-    -- 'bashls', -- high CPU usage...
-    'clangd',
-    'cssls',
-    'dartls',
-    'dockerls',
-    'gopls',
-    -- 'hls',
-    'html',
-    'jdtls',
-    'jsonls',
-    'julials',
-    -- 'kotlin_language_server',
-    'pyls',
-    'r_language_server',
-    'rls',
-    'texlab',
-    'tsserver',
-    'vimls',
-    'yamlls',
-}
-
-for _,val in pairs(lsp_list) do
-    lspconfig[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
-end
-
-local probeLoc = vim.fn.system('npm root -g')
-lspconfig.angularls.setup{
-  on_attach = lsp_attach,
-  capabilities = lsp_status.capabilities,
-  cmd = {"ngserver", "--stdio", "--tsProbeLocations", probeLoc , "--ngProbeLocations", probeLoc},
-}
-
-local system_name
-if vim.fn.has("mac") == 1 then
-  system_name = "macOS"
-elseif vim.fn.has("unix") == 1 then
-  system_name = "Linux"
-elseif vim.fn.has('win32') == 1 then
-  system_name = "Windows"
-else
-  print("Unsupported system for sumneko")
-end
-
-local sumneko_root_path = vim.fn.stdpath('cache')..'/nvim_lsp/sumneko_lua/lua-language-server'
-local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
-
-lspconfig.sumneko_lua.setup{
-    cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
-    on_attach = lsp_attach,
-    settings = {
-        Lua = {
-            runtime = { version = 'LuaJIT', path = vim.split(package.path, ';'), },
-            completion = { keywordSnippet = 'Disable', },
-            diagnostics = { enable = true, globals = {
-                'vim', 'describe', 'it', 'before_each', 'after_each' },
-            },
-            workspace = {
-                library = {
-                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                    [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-                }
-            }
-        }
-    },
-    capabilities = lsp_status.capabilities,
-}
-
-function _G.status()
-    if #vim.lsp.buf_get_clients() > 0 then
-        return lsp_status.status()
-    end
-    return ''
-end
-
-vim.lsp.handlers['textDocument/codeAction']     = require'lsputil.codeAction'.code_action_handler
-vim.lsp.handlers['textDocument/references']     = require'lsputil.locations'.references_handler
-vim.lsp.handlers['textDocument/definition']     = require'lsputil.locations'.definition_handler
-vim.lsp.handlers['textDocument/declaration']    = require'lsputil.locations'.declaration_handler
-vim.lsp.handlers['textDocument/typeDefinition'] = require'lsputil.locations'.typeDefinition_handler
-vim.lsp.handlers['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
-vim.lsp.handlers['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
-vim.lsp.handlers['workspace/symbol']            = require'lsputil.symbols'.workspace_handler
-
 -- Diagnostics
 
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
@@ -626,23 +454,3 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
         update_in_insert = false,
     }
 )
-
--- Telescope
-
-local actions = require('telescope.actions')
-
-require('telescope').setup {
-    defaults = {
-        mappings = {
-            i = {
-                ["<c-k>"] = actions.move_selection_previous,
-                ["<c-j>"] = actions.move_selection_next,
-                ["<c-d>"] = actions.close,
-            },
-        },
-    }
-}
-
--- Snippets
-
-require'snippets'.use_suggested_mappings()
