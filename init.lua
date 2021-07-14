@@ -1,15 +1,4 @@
 --------------------------------------------------------------------------------
--- Bootstrap packer
---------------------------------------------------------------------------------
-
-local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-  vim.api.nvim_command 'packadd packer.nvim'
-end
-
---------------------------------------------------------------------------------
 -- Options
 --------------------------------------------------------------------------------
 
@@ -91,15 +80,6 @@ end
 require('plugins')
 
 --------------------------------------------------------------------------------
--- Colorscheme
---------------------------------------------------------------------------------
-
-local theme = 'nightfly'
-local lightline_theme = theme
-
-vim.api.nvim_command('colorscheme ' .. theme)
-
---------------------------------------------------------------------------------
 -- Mappings
 --------------------------------------------------------------------------------
 
@@ -113,10 +93,11 @@ local nmap = {
     ['<C-l>'] = '<C-w><C-l>',
     ['<C-h>'] = '<C-w><C-h>',
 
-    ['<F1>']  = {'<cmd>tabprevious<CR>', { noremap = true , silent = true }},
-    ['<F2>']  = {'<cmd>bprevious!<CR>',  { noremap = true , silent = true }},
-    ['<F3>']  = {'<cmd>bnext!<CR>',      { noremap = true , silent = true }},
-    ['<F4>']  = {'<cmd>tabnext<CR>',     { noremap = true , silent = true }},
+    -- ['<F1>']  = {'<cmd>tabprevious<CR>', { noremap = true , silent = true }},
+    ['<F1>']  = {'<cmd>NvimTreeToggle<CR>', { noremap = true , silent = true }},
+    ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true }},
+    ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
+    ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},
 
     ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
 
@@ -138,21 +119,26 @@ local nmap = {
 
     ['[g']         = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', { silent = true }},
     [']g']         = {'<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', { silent = true }},
+
     ['gd']         = {'<cmd>lua vim.lsp.buf.definition()<CR>',      { silent = true }},
+
     ['gy']         = {'<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent = true }},
     ['gi']         = {'<cmd>lua vim.lsp.buf.implementation()<CR>',  { silent = true }},
     ['gr']         = {'<cmd>lua vim.lsp.buf.references()<CR>',      { silent = true }},
 
-    ['<leader>rn'] = {'<cmd>lua vim.lsp.buf.rename()<CR>',      {}},
+    -- ['<leader>rn'] = {'<cmd>lua vim.lsp.buf.rename()<CR>',      {}},
+    ['<leader>rn'] =  {"<cmd>lua require('lspsaga.rename').rename()<CR>", { noremap = true, silent = true }},
     ['<leader>f']  = {'<cmd>lua vim.lsp.buf.formatting()<CR>',  {}},
-    ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
+    -- ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
+    ['<leader>a'] =  {"<cmd>lua require('lspsaga.codeaction').code_action()<CR>", { noremap = true, silent = true }},
 
     -- Close location, quickfix and help windows
     ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
-    ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
-
+    -- ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
+    ['K']          = {"<cmd>lua require('lspsaga.hover').render_hover_doc()<CR>",         {silent = true, noremap = true}},
+    -- ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
+    ['<c-S>']      = {"<cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>", { noremap = true, silent = true }},
 
     ['<leader>ld'] = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',  {silent = true, nowait = true, noremap = true}},
     ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',            {silent = true, nowait = true, noremap = true}},
@@ -171,26 +157,36 @@ local nmap = {
 
 local imap = {
     ['jk']        = '<ESC>',
-    ['<F13>']     = {'<Plug>(completion_smart_tab)',             {silent = true}},
-    ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
-    ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
+    -- ['<F13>']     = {'<Plug>(completion_smart_tab)',             {silent = true}},
+    -- ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
+    -- ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
+    -- inoremap <silent><expr> <C-Space> compe#complete()
+    ['<C-space>']  = {'compe#complete()', {silent = true, noremap = true, expr = true}},
+    ['<CR>']  = {[[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], {silent = true, noremap = true, expr = true}},
+    ['<C-e>'] = {"compe#close('<C-e>')", {silent = true, noremap = true, expr = true}},
+    ['<C-k>'] = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true}},
+    ['<C-j>'] = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
 
-    ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
-    ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
+    -- ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
+    -- ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
+    ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
+    ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
+
+    ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
+    ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
 
     ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
-
-
-    -- ['<C-k>e'] = '<Plug>(gopher-error)',
-    -- ['<C-k>i'] = '<Plug>(gopher-if)',
-    -- ['<C-k>m'] = '<Plug>(gopher-implement)',
-    -- ['<C-k>r'] = '<Plug>(gopher-return)',
-    -- ['<C-k>f'] = '<Plug>(gopher-fillstruct)',
 }
 
 local xmap = {}
 local omap = {}
-local vmap = {}
+local vmap = {
+    ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
+    ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
+
+    ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
+    ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
+}
 
 local tmap = {
     ['<ESC>'] = '<C-\\><C-n>',
@@ -260,11 +256,6 @@ local vars = {
         ['context (xetex)']         = "-pdf -pdflatex=''texexec --xtx''",
     },
 
-    -- UltiSnips
-
-    -- UltiSnipsExpandTrigger       = '<nop>',
-    -- UltiSnipsJumpForwardTrigger  = '<nop>',
-    -- UltiSnipsJumpBackwardTrigger = '<nop>',
 
     -- VSnip
 
@@ -273,36 +264,6 @@ local vars = {
         typescriptreact = {'typescript'},
     },
 
-    -- Lightline
-
-    lightline = {
-        colorscheme        = lightline_theme,
-        active             = {
-            left           = { { 'mode', 'paste' },
-                               { 'gitbranch', 'readonly', 'filename', 'modified' } },
-            right          = { { 'lineinfo' },
-                               { 'percent' },
-                               { 'fileformat', 'fileencoding', 'filetype' },
-                               { 'lsp_status' } },
-        },
-        tabline            = {
-            left           = { { 'buffers' } },
-            right          = { { 'tabs' } },
-        },
-        component          = {
-            lineinfo       = "%3l:%-2c/%{line('$')}",
-            lsp_status     = '%{v:lua.status()}%<',
-        },
-        component_function = {
-            gitbranch      = 'fugitive#head',
-        },
-        component_expand   = {
-            buffers        = 'lightline#bufferline#buffers',
-        },
-        component_type     = {
-            buffers        = 'tabsel',
-        },
-    },
 
     -- ALE
 
@@ -331,20 +292,11 @@ local vars = {
     ale_go_golangci_lint_package = 1,
     ale_disable_lsp              = 1,
 
-    -- completion nvim
-
-    completion_enable_snippet    = 'vim-vsnip',
-    completion_enable_auto_paren = 1,
-
     -- diagnostic
 
     diagnostic_enable_virtual_text = 1,
     diagnostic_virtual_text_prefix = ' ',
     diagnostic_insert_delay = 1,
-
-    -- gopher
-
-    -- gopher_map = 0, -- diable gopher default mappings
 
     -- editor config
 
@@ -362,15 +314,9 @@ end
 
 
 local augroups = {
-    packer_compile = {
-        'BufWritePost plugins.lua PackerCompile',
-    },
     term = {
         'TermOpen term://* setlocal nonumber',
         'TermOpen * startinsert',
-    },
-    completion = {
-        "BufEnter * lua require'completion'.on_attach()",
     },
     lsp_highlight = {
         'CursorHold  <buffer> silent! lua vim.lsp.buf.document_highlight()',
@@ -410,6 +356,7 @@ local commands = {
     "Make silent lua require'async_make'.make()",
     '-nargs=* T  split  | terminal <args>',
     '-nargs=* VT vsplit | terminal <args>',
+    "ClearRegisters silent lua require'utils'.clear_registers()",
 }
 
 for _, c in pairs(commands) do
@@ -427,30 +374,3 @@ function _G.show_documentation()
         vim.lsp.buf.hover()
 	end
 end
-
--- Diagnostics
-
-vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-        -- Enable underline, use default values
-        underline = true,
-        -- Enable virtual text, override spacing to 4
-        virtual_text = {
-            spacing = 4,
-            prefix = '~',
-        },
-        -- Use a function to dynamically turn signs off
-        -- and on, using buffer local variables
-        signs = function(bufnr, _)
-            local ok, result = pcall(vim.api.nvim_buf_get_var, bufnr, 'show_signs')
-            -- No buffer local variable set, so just enable by default
-            if not ok then
-                return true
-            end
-
-            return result
-        end,
-        -- Disable a feature
-        update_in_insert = false,
-    }
-)
