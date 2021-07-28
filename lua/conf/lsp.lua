@@ -9,7 +9,7 @@ lsp_status.register_progress()
 
 local function lsp_attach(client)
     lsp_status.on_attach(client)
-    require "lsp_signature".on_attach()
+    require"lsp_signature".on_attach()
 end
 
 local lsp_list = {
