@@ -5,7 +5,7 @@ function M.make()
     local winnr = vim.fn.win_getid()
     local bufnr = vim.api.nvim_win_get_buf(winnr)
 
-    local makeprg = vim.bo.makeprg
+    local makeprg = vim.o.makeprg
     if not makeprg then return end
 
     local cmd = vim.fn.expandcmd(makeprg)
@@ -21,7 +21,6 @@ function M.make()
             vim.fn.setqflist({}, " ", {
                 title = cmd,
                 lines = lines,
-                efm = vim.api.nvim_buf_get_option(bufnr, "errorformat")
             })
             local height = #vim.fn.getqflist()
             if height == 0 then return end
