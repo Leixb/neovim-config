@@ -314,6 +314,12 @@ local vars = {
     -- editor config
 
     EditorConfig_exclude_patterns = {'fugitive://.*'},
+
+    -- barbar
+
+    bufferline = {
+        closable = false,
+    },
 }
 
 for k,v in pairs(vars) do

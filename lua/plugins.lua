@@ -41,10 +41,8 @@ return require('packer').startup({function(use, use_rocks)
             requires = {'kyazdani42/nvim-web-devicons', opt = true}
         },
         {
-            -- 'akinsho/nvim-bufferline.lua',
             'romgrk/barbar.nvim',
             requires = {'kyazdani42/nvim-web-devicons', opt = true},
-            -- config = function() require'conf.bufferline' end
         },
         {
             'kyazdani42/nvim-tree.lua',
