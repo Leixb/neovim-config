@@ -99,6 +99,19 @@ local nmap = {
     ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
     ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},
 
+    ['<F5>']  = {'<cmd>lua require("dapui").toggle()<CR>',     { noremap = true , silent = true }},
+
+
+    ['<F6>']       = {"<cmd>lua require'dap'.continue()<CR>",                                             { noremap = true , silent = true }},
+    ['<F7>']       = {"<cmd>lua require'dap'.step_over()<CR>",                                            { noremap = true , silent = true }},
+    ['<F8>']       = {"<cmd>lua require'dap'.step_into()<CR>",                                            { noremap = true , silent = true }},
+    ['<F9>']       = {"<cmd>lua require'dap'.step_out()<CR>",                                             { noremap = true , silent = true }},
+    ['<leader>b']  = {"<cmd>lua require'dap'.toggle_breakpoint()<CR>",                                    { noremap = true , silent = true }},
+    ['<leader>B']  = {"<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true , silent = true }},
+    ['<leader>lp'] = {"<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",{ noremap = true , silent = true }},
+    ['<leader>dr'] = {"<cmd>lua require'dap'.repl.open()<CR>",                                            { noremap = true , silent = true }},
+    ['<leader>dl'] = {"<cmd>lua require'dap'.run_last()<CR>",                                             { noremap = true , silent = true }},
+
     ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
 
     ['Y'] = 'y$',

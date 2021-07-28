@@ -127,6 +127,14 @@ return require('packer').startup({function(use, use_rocks)
         },
     }
 
+    -- DAP
+
+    use {
+        "rcarriga/nvim-dap-ui",
+        requires = {"mfussenegger/nvim-dap"},
+        config = function() require('conf.dap') end
+    }
+
 end,
     --------------------------------------------------------------------------------
     -- Packer config
