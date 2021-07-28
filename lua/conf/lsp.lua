@@ -25,7 +25,7 @@ local lsp_list = {
     'jsonls',
     'julials',
     -- 'kotlin_language_server',
-    'pyls',
+    'pylsp',
     'r_language_server',
     -- 'rls',
     'texlab',
