@@ -9,8 +9,11 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.api.nvim_command 'packadd packer.nvim'
 end
 
+
 return require('packer').startup({function(use, use_rocks)
     use 'wbthomason/packer.nvim'
+
+    use {'lewis6991/impatient.nvim', config = function()  require('impatient') end}
 
     use { 'famiu/nvim-reload', cmd = {'Restart', 'Reload'},
         config = function() require('conf.reload') end,
@@ -58,8 +61,20 @@ return require('packer').startup({function(use, use_rocks)
 
     -- Completion
     use {
-        {'hrsh7th/nvim-compe', config = function() require'conf.compe' end },
-        {'hrsh7th/vim-vsnip', requires = {'rafamadriz/friendly-snippets'}},
+        {'hrsh7th/nvim-cmp', config = function() require'conf.cmp' end},
+
+        {'hrsh7th/cmp-nvim-lsp'},
+        {'hrsh7th/cmp-buffer'},
+        {'hrsh7th/cmp-path'},
+        {'hrsh7th/cmp-calc'},
+        {'kdheepak/cmp-latex-symbols'},
+        {'hrsh7th/cmp-nvim-lua'},
+
+        {'L3MON4D3/LuaSnip'},
+        {'saadparwaiz1/cmp_luasnip'},
+        {'rafamadriz/friendly-snippets'},
+
+        {'onsails/lspkind-nvim'},
     }
 
     use {'nvim-lua/telescope.nvim', requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim'},
@@ -82,8 +97,9 @@ return require('packer').startup({function(use, use_rocks)
         {'sebdah/vim-delve',             ft = "go" },
         {'lervag/vimtex',                ft = {"tex", "latex"}},
         {'dart-lang/dart-vim-plugin',    ft = "dart"},
-        {'JuliaEditorSupport/julia-vim', disable = true}, -- , ft = "julia" -- does not load lazyly properly
+        {'JuliaEditorSupport/julia-vim', disable = true}, -- , ft = "julia" -- does not load lazily properly
         {'dag/vim-fish',                 ft = "fish"},
+        {'jalvesaq/Nvim-R',              branch = 'stable', ft={"r", "rmd", "rout"}},
     }
 
     -- Git
@@ -115,7 +131,6 @@ return require('packer').startup({function(use, use_rocks)
         'neovim/nvim-lspconfig',
         config = function() require('conf.lsp') end,
         requires = {
-            'nvim-lua/lsp-status.nvim',
             'kabouzeid/nvim-lspinstall',
             'glepnir/lspsaga.nvim',
             {'RishabhRD/nvim-lsputils', disable = true, requires = 'RishabhRD/popfix'},

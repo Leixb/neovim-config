@@ -1,16 +1,11 @@
 local lspconfig = require('lspconfig')
-local lsp_status = require('lsp-status')
-
-lsp_status.config{
-    status_symbol = '',
-}
-
-lsp_status.register_progress()
 
 local function lsp_attach(client)
-    lsp_status.on_attach(client)
     require"lsp_signature".on_attach()
 end
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 local lsp_list = {
     -- 'bashls', -- high CPU usage...
@@ -35,14 +30,17 @@ local lsp_list = {
 }
 
 for _,val in pairs(lsp_list) do
-    lspconfig[val].setup{ on_attach = lsp_attach, capabilities = lsp_status.capabilities }
+    lspconfig[val].setup{
+        on_attach = lsp_attach,
+        capabilities = capabilities,
+    }
 end
 
 local probeLoc = vim.fn.system('npm root -g')
 local probeNg = "/home/leix/.asdf/installs/nodejs/lts/.npm/lib/node_modules"
 lspconfig.angularls.setup{
     on_attach = lsp_attach,
-    capabilities = lsp_status.capabilities,
+    capabilities = capabilities,
     cmd = {"ngserver", "--stdio", "--tsProbeLocations", probeLoc , "--ngProbeLocations", probeNg},
 }
 
@@ -78,7 +76,7 @@ lspconfig.sumneko_lua.setup{
             }
         }
     },
-    capabilities = lsp_status.capabilities,
+    capabilities = capabilities,
 }
 
 require 'lspsaga'.init_lsp_saga()

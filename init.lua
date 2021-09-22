@@ -174,19 +174,19 @@ local imap = {
     -- ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
     -- ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
     -- inoremap <silent><expr> <C-Space> compe#complete()
-    ['<C-space>']  = {'compe#complete()', {silent = true, noremap = true, expr = true}},
-    ['<CR>']  = {[[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], {silent = true, noremap = true, expr = true}},
+    -- ['<C-space>']  = {'compe#complete()', {silent = true, noremap = true, expr = true}},
+    -- ['<CR>']  = {[[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], {silent = true, noremap = true, expr = true}},
     ['<C-e>'] = {"compe#close('<C-e>')", {silent = true, noremap = true, expr = true}},
     ['<C-k>'] = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true}},
     ['<C-j>'] = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
 
     -- ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
     -- ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
-    ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
-    ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
 
-    ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
-    ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
 
     ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 }
@@ -194,11 +194,11 @@ local imap = {
 local xmap = {}
 local omap = {}
 local vmap = {
-    ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
-    ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
 
-    ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
-    ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
+    -- ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
 }
 
 local tmap = {
@@ -320,6 +320,11 @@ local vars = {
     bufferline = {
         closable = false,
     },
+
+    -- nvim-R
+
+    -- R_user_maps_only = 1,
+    R_assign = 0,
 }
 
 for k,v in pairs(vars) do
