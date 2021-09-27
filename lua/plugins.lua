@@ -119,9 +119,6 @@ return require('packer').startup({function(use)
         config = function() require('spellsitter').setup() end
     }
 
-    -- Lint
-    -- use 'dense-analysis/ale'
-
     -- LSP
     use {
         'neovim/nvim-lspconfig',

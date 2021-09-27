@@ -277,42 +277,6 @@ local vars = {
         ['context (xetex)']         = "-pdf -pdflatex=''texexec --xtx''",
     },
 
-
-    -- VSnip
-
-    vsnip_filetypes = {
-        javascriptreact = {'javascript'},
-        typescriptreact = {'typescript'},
-    },
-
-
-    -- ALE
-
-    ale_fixers = {
-        ['*']      = {'remove_trailing_lines', 'trim_whitespace'},
-        css        = {'prettier', 'stylelint'},
-        javascript = {'eslint', 'prettier'},
-        python     = {'isort', 'black'},
-        HTML       = {'HTMLHint', 'proselint'},
-        ruby       = {'rubocop'},
-        go         = {'gofmt', 'goimports'},
-        dart       = {'dartfmt'},
-        r          = {'styler'},
-    },
-    ale_linters_explicit = 1,
-    ale_lint_delay = 1000,
-    ale_linters = {
-        go         = {'staticcheck', 'golangci-lint'},
-        python     = {'mypy', 'pylint'},
-    },
-    ale_fix_on_save              = 1,
-    ale_fix_on_save_ignore       = {
-        julia      = {'remove_trailing_lines', 'trim_whitespace'},
-    },
-    ale_go_imports_executable    = 'gofumports',
-    ale_go_golangci_lint_package = 1,
-    ale_disable_lsp              = 1,
-
     -- diagnostic
 
     diagnostic_enable_virtual_text = 1,
@@ -354,9 +318,6 @@ local augroups = {
         'CursorHold  <buffer> silent! lua vim.lsp.buf.document_highlight()',
         'CursorHoldI <buffer> silent! lua vim.lsp.buf.document_highlight()',
         'CursorMoved <buffer> silent! lua vim.lsp.buf.clear_references()',
-    },
-    ale =  {
-        "BufEnter tex let b:ale_lint_on_text_changed=0",
     },
     highlight_on_yank = {
         'TextYankPost * silent! lua vim.highlight.on_yank()',
