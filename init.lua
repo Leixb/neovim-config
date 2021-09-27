@@ -77,6 +77,10 @@ end
 -- Plugins
 --------------------------------------------------------------------------------
 
+require('impatient')
+require('packer_compiled')
+vim.g.did_load_filetypes = 1
+
 require('plugins')
 
 --------------------------------------------------------------------------------
@@ -93,7 +97,6 @@ local nmap = {
     ['<C-l>'] = '<C-w><C-l>',
     ['<C-h>'] = '<C-w><C-h>',
 
-    -- ['<F1>']  = {'<cmd>tabprevious<CR>', { noremap = true , silent = true }},
     ['<F1>']  = {'<cmd>NvimTreeToggle<CR>', { noremap = true , silent = true }},
     ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true }},
     ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
@@ -170,7 +173,8 @@ local nmap = {
 
 local imap = {
     ['jk']        = '<ESC>',
-    -- ['<F13>']     = {'<Plug>(completion_smart_tab)',             {silent = true}},
+    ['<F13>']     = {'<Plug>luasnip-next-choice',                 {silent = true}},
+    ['']         = {'<Plug>luasnip-next-choice',                 {silent = true}},
     -- ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
     -- ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
     -- inoremap <silent><expr> <C-Space> compe#complete()
@@ -191,6 +195,10 @@ local imap = {
     ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
 }
 
+local smap = {
+    ['<F13>']     = {'<Plug>luasnip-next-choice',                 {silent = true}},
+    ['']         = {'<Plug>luasnip-next-choice',                 {silent = true}},
+}
 local xmap = {}
 local omap = {}
 local vmap = {
@@ -211,7 +219,7 @@ local cmap = {
 
 local default_args = { noremap = true }
 
-for mode, map in pairs({ n = nmap, v = vmap, t = tmap, c = cmap, i = imap, x = xmap, o = omap }) do
+for mode, map in pairs({ n = nmap, v = vmap, s = smap, t = tmap, c = cmap, i = imap, x = xmap, o = omap }) do
     for from, to in pairs(map) do
         if type(to) == 'table' then
             vim.api.nvim_set_keymap(mode, from, to[1], to[2])

@@ -36,14 +36,6 @@ for _,val in pairs(lsp_list) do
     }
 end
 
-local probeLoc = vim.fn.system('npm root -g')
-local probeNg = "/home/leix/.asdf/installs/nodejs/lts/.npm/lib/node_modules"
-lspconfig.angularls.setup{
-    on_attach = lsp_attach,
-    capabilities = capabilities,
-    cmd = {"ngserver", "--stdio", "--tsProbeLocations", probeLoc , "--ngProbeLocations", probeNg},
-}
-
 local system_name
 if vim.fn.has("mac") == 1 then
     system_name = "macOS"
@@ -79,7 +71,6 @@ lspconfig.sumneko_lua.setup{
     capabilities = capabilities,
 }
 
-require 'lspsaga'.init_lsp_saga()
 
 -- Diagnostics
 
@@ -107,10 +98,3 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
         update_in_insert = false,
     }
 )
-
-function _G.status()
-    if #vim.lsp.buf_get_clients() > 0 then
-        return require'lsp-status'.status()
-    end
-    return ''
-end

@@ -9,46 +9,41 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.api.nvim_command 'packadd packer.nvim'
 end
 
-
-return require('packer').startup({function(use, use_rocks)
+return require('packer').startup({function(use)
     use 'wbthomason/packer.nvim'
 
-    use {'lewis6991/impatient.nvim', config = function()  require('impatient') end}
-
-    use { 'famiu/nvim-reload', cmd = {'Restart', 'Reload'},
-        config = function() require('conf.reload') end,
-    }
+    use 'lewis6991/impatient.nvim'
+    use 'nathom/filetype.nvim'
 
     use 'tpope/vim-surround'
     use 'tpope/vim-repeat'
 
-    use 'tpope/vim-apathy'
     use 'tpope/vim-eunuch'
 
-    use 'gennaro-tedesco/nvim-peekup'
-
-    use { 'junegunn/vim-easy-align', cmd = "EasyAlign" }
+    use {'junegunn/vim-easy-align', cmd = "EasyAlign"}
 
     use 'editorconfig/editorconfig-vim'
 
-    use { 'windwp/nvim-autopairs', config = function() require('nvim-autopairs').setup() end }
+    use {'windwp/nvim-autopairs', config = function() require('nvim-autopairs').setup() end }
 
     use {'norcalli/nvim-colorizer.lua', config = function() require'colorizer'.setup() end }
+
+    use {'kwkarlwang/bufresize.nvim', config = function() require('bufresize').setup() end }
 
     -- Status lines
     use {
         {
-            'glepnir/galaxyline.nvim',
-            branch = 'main',
+            'hoob3rt/lualine.nvim',
             config = function() require'conf.statusline' end,
-            requires = {'kyazdani42/nvim-web-devicons', opt = true}
+            requires = {{'kyazdani42/nvim-web-devicons', opt = true}, 'arkav/lualine-lsp-progress'},
         },
         {
             'romgrk/barbar.nvim',
             requires = {'kyazdani42/nvim-web-devicons', opt = true},
         },
         {
-            'kyazdani42/nvim-tree.lua',
+            'kyazdani42/nvim-tree.lua', module = 'nvim-tree', cmd = {'NvimtreeToggle', 'NvimtreeOpen'},
+            config = function() require'nvim-tree'.setup() end,
             requires = {'kyazdani42/nvim-web-devicons', opt = true},
         }
     }
@@ -70,14 +65,15 @@ return require('packer').startup({function(use, use_rocks)
         {'kdheepak/cmp-latex-symbols'},
         {'hrsh7th/cmp-nvim-lua'},
 
-        {'L3MON4D3/LuaSnip'},
+        {'L3MON4D3/LuaSnip', config = function() require'snippets' end},
         {'saadparwaiz1/cmp_luasnip'},
         {'rafamadriz/friendly-snippets'},
 
         {'onsails/lspkind-nvim'},
     }
 
-    use {'nvim-lua/telescope.nvim', requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim'},
+    use {'nvim-lua/telescope.nvim', module = 'telescope', cmd = 'Telescope',
+        requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim'},
         config = function() require'conf.telescope' end}
 
     use { 'nvim-treesitter/nvim-treesitter', config = function() require'conf.treesitter' end,
@@ -97,7 +93,7 @@ return require('packer').startup({function(use, use_rocks)
         {'sebdah/vim-delve',             ft = "go" },
         {'lervag/vimtex',                ft = {"tex", "latex"}},
         {'dart-lang/dart-vim-plugin',    ft = "dart"},
-        {'JuliaEditorSupport/julia-vim', disable = true}, -- , ft = "julia" -- does not load lazily properly
+        {'JuliaEditorSupport/julia-vim', disable = true}, -- , ft = "julia" -- does not load lazily properly (https://github.com/JuliaEditorSupport/julia-vim/issues/269)
         {'dag/vim-fish',                 ft = "fish"},
         {'jalvesaq/Nvim-R',              branch = 'stable', ft={"r", "rmd", "rout"}},
     }
@@ -117,26 +113,26 @@ return require('packer').startup({function(use, use_rocks)
     }
 
     -- Spell
-    use {'rhysd/vim-grammarous', cmd = {"GrammarousCheck"}, } -- ft = {"markdown", "tex", "latex", "text"},
+    use {'rhysd/vim-grammarous', cmd = {'GrammarousCheck'}, } -- ft = {"markdown", "tex", "latex", "text"},
     use {
         'lewis6991/spellsitter.nvim',
         config = function() require('spellsitter').setup() end
     }
 
     -- Lint
-    use 'dense-analysis/ale'
+    -- use 'dense-analysis/ale'
 
     -- LSP
     use {
         'neovim/nvim-lspconfig',
         config = function() require('conf.lsp') end,
         requires = {
-            'kabouzeid/nvim-lspinstall',
-            'glepnir/lspsaga.nvim',
-            {'RishabhRD/nvim-lsputils', disable = true, requires = 'RishabhRD/popfix'},
+            {'kabouzeid/nvim-lspinstall', cmd = 'LspInstall'},
+            {'glepnir/lspsaga.nvim', module = 'lspsaga', config = function() require 'lspsaga'.init_lsp_saga() end },
             'jose-elias-alvarez/nvim-lsp-ts-utils',
             'ray-x/lsp_signature.nvim',
-            'simrat39/symbols-outline.nvim',
+            -- {'simrat39/symbols-outline.nvim', cmd = {'SymbolsOutline', 'SymbolsOutlineOpen'}},
+            {'simrat39/symbols-outline.nvim', opt = false, cmd = {'SymbolsOutline', 'SymbolsOutlineOpen'}},
         },
     }
 
@@ -144,10 +140,10 @@ return require('packer').startup({function(use, use_rocks)
 
     use {
         "rcarriga/nvim-dap-ui",
-        requires = {"mfussenegger/nvim-dap"},
+        module = 'dapui',
+        requires = {"mfussenegger/nvim-dap", module = 'dap'},
         config = function() require('conf.dap') end
     }
-
 end,
     --------------------------------------------------------------------------------
     -- Packer config
@@ -158,6 +154,7 @@ end,
             open_fn = function()
                 return require('packer.util').float({ border = 'single' })
             end
-        }
+        },
+        compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
     }
 })
