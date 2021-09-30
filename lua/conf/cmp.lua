@@ -54,6 +54,7 @@ cmp.setup({
         { name = 'path' },
         { name = 'nvim_lua' },
         { name = 'latex_symbols' },
+        { name = 'neorg' },
     },
     formatting = {
         format = function(entry, vim_item)
@@ -69,6 +70,7 @@ cmp.setup({
                 latex_symbols = "[Latex]",
                 path = "[Path]",
                 calc = "[Calc]",
+                neorg = "[Neorg]",
             })[entry.source.name]
             return vim_item
         end,

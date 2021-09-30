@@ -139,6 +139,10 @@ return require'packer'.startup{function(use)
         requires = {'mfussenegger/nvim-dap', module = 'dap'},
         config = function() require'conf.dap' end
     }
+
+    -- ORG mode
+    use { 'nvim-neorg/neorg', config = function() require('conf.org') end, requires = 'nvim-lua/plenary.nvim' }
+
 end,
     --------------------------------------------------------------------------------
     -- Packer config
