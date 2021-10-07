@@ -20,6 +20,7 @@ require('neorg').setup {
                     my_workspace = "~/neorg"
                 }
             }
-        }
+        },
+        ["core.integrations.telescope"] = {},
     },
 }

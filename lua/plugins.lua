@@ -12,7 +12,6 @@ end
 return require'packer'.startup{function(use)
     use 'wbthomason/packer.nvim'
 
-    use 'lewis6991/impatient.nvim'
     use 'nathom/filetype.nvim'
 
     use 'tpope/vim-surround'
@@ -154,6 +153,5 @@ end,
                 return require'packer.util'.float({ border = 'single' })
             end
         },
-        compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
     }
 }
