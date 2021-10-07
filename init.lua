@@ -77,8 +77,14 @@ end
 -- Plugins
 --------------------------------------------------------------------------------
 
+-- Bootstrap packer into data (.local/share/nvim)
+package.path = package.path .. ';'.. require('packer.util').join_paths(vim.fn.stdpath('data'), 'plugin', 'packer_compiled.lua')
+local ok, err = pcall(require, 'packer_compiled') 
 vim.g.did_load_filetypes = 1
 require('plugins')
+if not ok then 
+    require('packer').sync()
+end
 
 --------------------------------------------------------------------------------
 -- Mappings

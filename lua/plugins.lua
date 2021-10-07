@@ -153,5 +153,6 @@ end,
                 return require'packer.util'.float({ border = 'single' })
             end
         },
+        compile_path = require('packer.util').join_paths(vim.fn.stdpath('data'), 'plugin', 'packer_compiled.lua'),
     }
 }
