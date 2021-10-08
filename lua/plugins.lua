@@ -96,6 +96,7 @@ return require'packer'.startup{function(use)
         {'JuliaEditorSupport/julia-vim', disable = true}, -- , ft = 'julia' -- does not load lazily properly (https://github.com/JuliaEditorSupport/julia-vim/issues/269)
         {'dag/vim-fish',                 ft = 'fish'},
         {'jalvesaq/Nvim-R',              branch = 'stable', ft={'r', 'rmd', 'rout'}},
+        {'LnL7/vim-nix',                 ft = 'nix'},
     }
 
     -- Git
