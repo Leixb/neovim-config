@@ -31,6 +31,7 @@ return require'packer'.startup{function(use)
 
     -- Status lines
     use {
+            'kyazdani42/nvim-web-devicons',
         {
             'hoob3rt/lualine.nvim',
             config = function() require'conf.statusline' end,
