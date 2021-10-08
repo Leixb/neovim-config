@@ -24,27 +24,26 @@ cmp.setup({
         ['<C-e>'] = cmp.mapping.close(),
         ['<CR>'] = cmp.mapping.confirm({ select = false }),
 
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if vim.fn.pumvisible() == 1 then
-                feedkey("<C-n>")
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-            end
-        end, { "i", "s" }),
-
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if vim.fn.pumvisible() == 1 then
-                feedkey("<C-p>")
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if luasnip and luasnip.jumpable(1) then
+                luasnip.jump(1)
+            elseif cmp.visible() then
+                cmp.select_next_item()
             else
                 fallback()
             end
         end, { "i", "s" }),
+
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if luasnip and luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            elseif cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+
     },
     sources = {
         { name = 'nvim_lsp' },
