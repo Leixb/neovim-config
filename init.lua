@@ -328,7 +328,7 @@ local augroups = {
         'TextYankPost * silent! lua vim.highlight.on_yank()',
     },
     spell_check = {
-        'FileType markdown,gitcommit,latex,text,tex setlocal spell',
+        'FileType markdown,gitcommit,latex,text,tex,rmd setlocal spell',
     },
     spell_check_journal_lang = {
         'BufRead,BufNewFile,BufEnter */journal/* setlocal spelllang=ca',
