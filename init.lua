@@ -118,6 +118,8 @@ local nmap = {
     ['<leader>dr'] = {"<cmd>lua require'dap'.repl.open()<CR>",                                            { noremap = true , silent = true }},
     ['<leader>dl'] = {"<cmd>lua require'dap'.run_last()<CR>",                                             { noremap = true , silent = true }},
 
+    ['<leader>bd'] = {"<cmd>BufferClose<CR>", {noremap = true, silent = true}},
+
     ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
 
     ['Y'] = 'y$',
