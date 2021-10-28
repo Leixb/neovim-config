@@ -21,6 +21,7 @@ local lsp_list = {
     'julials',
     -- 'kotlin_language_server',
     'pylsp',
+    'rnix',
     'r_language_server',
     -- 'rls',
     'texlab',
