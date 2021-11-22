@@ -21,6 +21,5 @@ require('neorg').setup {
                 }
             }
         },
-        ["core.integrations.telescope"] = {},
     },
 }
