@@ -29,8 +29,6 @@ return require'packer'.startup{function(use)
 
     use {'kwkarlwang/bufresize.nvim', config = function() require'bufresize'.setup() end }
 
-    use {'wakatime/vim-wakatime'}
-
     -- Status lines
     use {
             'kyazdani42/nvim-web-devicons',
