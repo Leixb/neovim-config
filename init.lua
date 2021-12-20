@@ -8,6 +8,7 @@ local opts = {
 
     backup        = false,
     writebackup   = false,
+    undofile      = true,
 
     smarttab      = true,
 
@@ -25,6 +26,7 @@ local opts = {
     updatetime    = 300,
     ttimeoutlen   = 10,
     timeoutlen    = 500,
+    lazyredraw    = true,
 
     title         = true,
 
@@ -80,9 +82,9 @@ end
 -- Bootstrap packer into data (.local/share/nvim)
 package.path = package.path .. ';'.. vim.fn.stdpath('data') .. '/plugin/packer_compiled.lua'
 local ok, _ = pcall(require, 'packer_compiled')
-vim.g.did_load_filetypes = 1
+-- vim.g.did_load_filetypes = 1
 require('plugins')
-if not ok then 
+if not ok then
     require('packer').sync()
 end
 

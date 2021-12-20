@@ -12,7 +12,7 @@ end
 return require'packer'.startup{function(use)
     use 'wbthomason/packer.nvim'
 
-    use 'nathom/filetype.nvim'
+    -- use 'nathom/filetype.nvim'
 
     use 'tpope/vim-surround'
     use 'tpope/vim-repeat'
