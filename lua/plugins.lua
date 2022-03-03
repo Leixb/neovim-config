@@ -97,6 +97,7 @@ return require'packer'.startup{function(use)
         {'dag/vim-fish',                 ft = 'fish'},
         {'jalvesaq/Nvim-R',              branch = 'stable', ft={'r', 'rmd', 'rout', 'rnoweb'}},
         {'LnL7/vim-nix',                 ft = 'nix'},
+        'neo4j-contrib/cypher-vim-syntax',
     }
 
     -- Git
