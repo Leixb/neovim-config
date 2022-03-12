@@ -111,7 +111,7 @@ return require'packer'.startup{function(use)
             }
         },
         {'junegunn/gv.vim',     cmd = 'GV'},
-        {'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function() require'gitsigns'.setup() end},
+        {'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function() require'conf.gitsigns' end},
     }
 
     -- Spell
