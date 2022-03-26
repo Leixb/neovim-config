@@ -315,53 +315,97 @@ end
 -- augroups
 --------------------------------------------------------------------------------
 
+local group_id = vim.api.nvim_create_augroup('init.lua.group', {})
 
-local augroups = {
-    term = {
-        'TermOpen term://* setlocal nonumber',
-        'TermOpen * startinsert',
-    },
-    lsp_highlight = {
-        'CursorHold  <buffer> silent! lua vim.lsp.buf.document_highlight()',
-        'CursorHoldI <buffer> silent! lua vim.lsp.buf.document_highlight()',
-        'CursorMoved <buffer> silent! lua vim.lsp.buf.clear_references()',
-    },
-    highlight_on_yank = {
-        'TextYankPost * silent! lua vim.highlight.on_yank()',
-    },
-    spell_check = {
-        'FileType markdown,gitcommit,latex,text,tex,rmd setlocal spell',
-    },
-    spell_check_journal_lang = {
-        'BufRead,BufNewFile,BufEnter */journal/* setlocal spelllang=ca',
-    },
-}
+vim.api.nvim_create_autocmd(
+    "TermOpen",
+    {
+        pattern = 'term://*',
+        command = 'setlocal nonumber',
+        group = group_id
+    })
 
-for augroup, autocmds in pairs(augroups) do
-    vim.api.nvim_command(('augroup leixb-%s'):format(augroup))
-    vim.api.nvim_command('autocmd!')
-    for _, autocmd in ipairs(autocmds) do
-        vim.api.nvim_command(('autocmd %s'):format(autocmd))
-    end
-    vim.api.nvim_command('augroup end')
-end
+vim.api.nvim_create_autocmd(
+    "TermOpen",
+    {
+        pattern = '*',
+        command = 'startinsert',
+        group = group_id
+    })
+
+vim.api.nvim_create_autocmd(
+    {'CursorHold', 'CursorHoldI'},
+    {
+        pattern = '<buffer>',
+        callback = function() vim.lsp.buf.document_highlight() end,
+        group = group_id
+    })
+
+vim.api.nvim_create_autocmd(
+    'CursorMoved',
+    {
+        pattern = '<buffer>',
+        callback = function() vim.lsp.buf.clear_references() end,
+        group = group_id
+    })
+
+vim.api.nvim_create_autocmd(
+    'TextYankPost',
+    {
+        pattern = '*',
+        callback = function() vim.highlight.on_yank() end,
+        group = group_id
+    })
+
+vim.api.nvim_create_autocmd(
+    'FileType',
+    {
+        pattern = {
+            'gitcommit',
+            'gitrebase',
+            'latex',
+            'markdown',
+            'rmd',
+            'tex',
+            'text',
+        },
+        command = 'setlocal spell',
+        group = group_id
+    })
 
 --------------------------------------------------------------------------------
 -- commands
 --------------------------------------------------------------------------------
 
-local commands = {
-    'DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis',
-    'VimConfig edit $MYVIMRC',
-    "Make silent lua require'async_make'.make()",
-    '-nargs=* T  split  | terminal <args>',
-    '-nargs=* VT vsplit | terminal <args>',
-    "ClearRegisters silent lua require'utils'.clear_registers()",
-}
+vim.api.nvim_add_user_command(
+    'DiffOrig',
+    'vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis',
+    {}
+)
 
-for _, c in pairs(commands) do
-    vim.api.nvim_command('command! ' .. c)
-end
+vim.api.nvim_add_user_command(
+    'T',
+    'split | terminal <args>',
+    { nargs='*' }
+)
+
+vim.api.nvim_add_user_command(
+    'VT',
+    'vsplit | terminal <args>',
+    { nargs='*' }
+)
+
+vim.api.nvim_add_user_command(
+    'ClearRegisters',
+    function() require'utils'.clear_registers() end,
+    {}
+)
+
+vim.api.nvim_add_user_command(
+    'Make',
+    function() require'async_make'.make() end,
+    {}
+)
 
 --------------------------------------------------------------------------------
 -- Helper funcitons
