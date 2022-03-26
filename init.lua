@@ -149,15 +149,15 @@ local nmap = {
     ['gi']         = { vim.lsp.buf.implementation,  { silent = true }},
     ['gr']         = { vim.lsp.buf.references,      { silent = true }},
 
-    ['<leader>rn'] = {function() require'lspsaga.rename'.rename() end,          { noremap = true, silent = true }},
-    ['<leader>f']  = {vim.lsp.buf.formatting,                    {}},
-    ['<leader>a']  = {function() require'lspsaga.codeaction'.code_action() end, { noremap = true, silent = true }},
+    ['<leader>rn'] = {vim.lsp.buf.rename,                                               { noremap = true, silent = true }},
+    ['<leader>f']  = {vim.lsp.buf.formatting,                                           {}},
+    ['<leader>a']  = {function() require'code_action_menu'.open_code_action_menu() end, { noremap = true, silent = true }},
 
     -- Close location, quickfix and help windows
     ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    ['K']          = {function() require'lspsaga.hover'.render_hover_doc() end,         {silent = true, noremap = true}},
-    ['<c-S>']      = {function() require'lspsaga.signaturehelp'.signature_help() end, { noremap = true, silent = true }},
+    ['K']          = {vim.lsp.buf.hover,         {silent = true, noremap = true}},
+    ['<c-S>']      = {vim.lsp.buf.signature_help, { noremap = true, silent = true }},
 
     ['<leader>ld'] = {vim.lsp.diagnostic.show_line_diagnostics,  {silent = true, nowait = true, noremap = true}},
     ['<leader>d']  = {vim.lsp.diagnostic.set_loclist,            {silent = true, nowait = true, noremap = true}},

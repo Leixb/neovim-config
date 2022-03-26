@@ -162,11 +162,11 @@ return require'packer'.startup{function(use)
         config = function() require'conf.lsp' end,
         requires = {
             {'kabouzeid/nvim-lspinstall', cmd = 'LspInstall'},
-            {'glepnir/lspsaga.nvim', module = 'lspsaga', config = function() require'lspsaga'.init_lsp_saga() end },
             'jose-elias-alvarez/nvim-lsp-ts-utils',
             'ray-x/lsp_signature.nvim',
             {'simrat39/symbols-outline.nvim', opt = false, cmd = {'SymbolsOutline', 'SymbolsOutlineOpen'}},
-        },
+            {'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu', module = 'code_action_menu' },
+        }
     }
 
     -- DAP
