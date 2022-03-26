@@ -112,7 +112,7 @@ return require'packer'.startup{function(use)
         },
         {'junegunn/gv.vim',     cmd = 'GV'},
         {'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function()
-            require('gitsigns').setup {
+            require'gitsigns'.setup {
                 on_attach = function(bufnr)
                     local gs = package.loaded.gitsigns
 
@@ -178,7 +178,7 @@ return require'packer'.startup{function(use)
     }
 
     -- ORG mode
-    use { 'nvim-neorg/neorg', config = function() require('conf.org') end, requires = 'nvim-lua/plenary.nvim' }
+    use { 'nvim-neorg/neorg', config = function() require'conf.org' end, requires = 'nvim-lua/plenary.nvim' }
 
 end,
     --------------------------------------------------------------------------------
@@ -191,6 +191,6 @@ end,
                 return require'packer.util'.float({ border = 'single' })
             end
         },
-        compile_path = require('packer.util').join_paths(vim.fn.stdpath('data'), 'plugin', 'packer_compiled.lua'),
+        compile_path = require'packer.util'.join_paths(vim.fn.stdpath('data'), 'plugin', 'packer_compiled.lua'),
     }
 }

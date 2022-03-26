@@ -1,9 +1,9 @@
--- require("yabs"):setup {
+-- require'yabs':setup {
 --     lua = function()
---         vim.cmd("luafile %")
+--         vim.cmd('luafile %')
 --     end,
 --     python = function()
---         local file = vim.fn.expand("%:~:.")
---         return "python3 " .. file
+--         local file = vim.fn.expand('%:~:.')
+--         return 'python3 ' .. file
 --     end
 -- }

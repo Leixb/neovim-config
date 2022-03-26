@@ -66,7 +66,7 @@ local opts = {
 
     textwidth     = 80,
     wrap          = true,
-    formatoptions = "jcroql",
+    formatoptions = 'jcroql',
 
     omnifunc      = 'v:lua.vim.lsp.omnifunc',
 }
@@ -120,7 +120,7 @@ local nmap = {
     ['<leader>dr'] = {function() require'dap'.repl.open() end,                                            { noremap = true , silent = true }},
     ['<leader>dl'] = {function() require'dap'.run_last() end,                                             { noremap = true , silent = true }},
 
-    ['<leader>bd'] = {"<cmd>BufferClose<CR>", {noremap = true, silent = true}},
+    ['<leader>bd'] = {'<cmd>BufferClose<CR>', {noremap = true, silent = true}},
 
     ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
 
@@ -288,7 +288,7 @@ end
 local group_id = vim.api.nvim_create_augroup('init.lua.group', {})
 
 vim.api.nvim_create_autocmd(
-    "TermOpen",
+    'TermOpen',
     {
         pattern = 'term://*',
         callback = function()
@@ -298,7 +298,7 @@ vim.api.nvim_create_autocmd(
     })
 
 vim.api.nvim_create_autocmd(
-    "TermOpen",
+    'TermOpen',
     {
         pattern = '*',
         command = 'startinsert',

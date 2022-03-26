@@ -1,4 +1,4 @@
-require('rust-tools').setup({
+require'rust-tools'.setup({
     tools = {
         autoSetHints = true,
         hover_with_actions = true,
