@@ -107,18 +107,18 @@ local nmap = {
     ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
     ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},
 
-    ['<F5>']  = {'<cmd>lua require("dapui").toggle()<CR>',     { noremap = true , silent = true }},
+    ['<F5>']  = {require'dapui'.toggle,     { noremap = true , silent = true }},
 
 
-    ['<F6>']       = {"<cmd>lua require'dap'.continue()<CR>",                                             { noremap = true , silent = true }},
-    ['<F7>']       = {"<cmd>lua require'dap'.step_over()<CR>",                                            { noremap = true , silent = true }},
-    ['<F8>']       = {"<cmd>lua require'dap'.step_into()<CR>",                                            { noremap = true , silent = true }},
-    ['<F9>']       = {"<cmd>lua require'dap'.step_out()<CR>",                                             { noremap = true , silent = true }},
-    ['<leader>b']  = {"<cmd>lua require'dap'.toggle_breakpoint()<CR>",                                    { noremap = true , silent = true }},
-    ['<leader>B']  = {"<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true , silent = true }},
-    ['<leader>lp'] = {"<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",{ noremap = true , silent = true }},
-    ['<leader>dr'] = {"<cmd>lua require'dap'.repl.open()<CR>",                                            { noremap = true , silent = true }},
-    ['<leader>dl'] = {"<cmd>lua require'dap'.run_last()<CR>",                                             { noremap = true , silent = true }},
+    ['<F6>']       = {require'dap'.continue,                                             { noremap = true , silent = true }},
+    ['<F7>']       = {require'dap'.step_over,                                            { noremap = true , silent = true }},
+    ['<F8>']       = {require'dap'.step_into,                                            { noremap = true , silent = true }},
+    ['<F9>']       = {require'dap'.step_out,                                             { noremap = true , silent = true }},
+    ['<leader>b']  = {require'dap'.toggle_breakpoint,                                    { noremap = true , silent = true }},
+    ['<leader>B']  = {function() require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, { noremap = true , silent = true }},
+    ['<leader>lp'] = {function() require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end,{ noremap = true , silent = true }},
+    ['<leader>dr'] = {require'dap'.repl.open,                                            { noremap = true , silent = true }},
+    ['<leader>dl'] = {require'dap'.run_last,                                             { noremap = true , silent = true }},
 
     ['<leader>bd'] = {"<cmd>BufferClose<CR>", {noremap = true, silent = true}},
 
@@ -133,73 +133,49 @@ local nmap = {
 
 -- Telescope mappings
 
-    ['<C-S-p>']          = "<cmd>lua require('telescope.builtin').git_files()<CR>",
-    ['<C-p>']            = "<cmd>lua require('telescope.builtin').fd()<CR>",
-    ['<leader><leader>'] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
-    ['<Bs>']             = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+    ['<C-S-p>']          = require'telescope.builtin'.git_files,
+    ['<C-p>']            = require'telescope.builtin'.fd,
+    ['<leader><leader>'] = require'telescope.builtin'.buffers,
+    ['<Bs>']             = require'telescope.builtin'.live_grep,
 
 -- LSP mappings
 
-    ['[g']         = {'<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', { silent = true }},
-    [']g']         = {'<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', { silent = true }},
+    ['[g']         = { vim.lsp.diagnostic.goto_prev, { silent = true }},
+    [']g']         = { vim.lsp.diagnostic.goto_next, { silent = true }},
 
-    ['gd']         = {'<cmd>lua vim.lsp.buf.definition()<CR>',      { silent = true }},
+    ['gd']         = { vim.lsp.buf.definition,      { silent = true }},
 
-    ['gy']         = {'<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent = true }},
-    ['gi']         = {'<cmd>lua vim.lsp.buf.implementation()<CR>',  { silent = true }},
-    ['gr']         = {'<cmd>lua vim.lsp.buf.references()<CR>',      { silent = true }},
+    ['gy']         = { vim.lsp.buf.type_definition, { silent = true }},
+    ['gi']         = { vim.lsp.buf.implementation,  { silent = true }},
+    ['gr']         = { vim.lsp.buf.references,      { silent = true }},
 
-    -- ['<leader>rn'] = {'<cmd>lua vim.lsp.buf.rename()<CR>',      {}},
-    ['<leader>rn'] =  {"<cmd>lua require('lspsaga.rename').rename()<CR>", { noremap = true, silent = true }},
-    ['<leader>f']  = {'<cmd>lua vim.lsp.buf.formatting()<CR>',  {}},
-    -- ['<leader>a']  = {'<cmd>lua vim.lsp.buf.code_action()<CR>', {}},
-    ['<leader>a'] =  {"<cmd>lua require('lspsaga.codeaction').code_action()<CR>", { noremap = true, silent = true }},
+    ['<leader>rn'] = {require'lspsaga.rename'.rename,          { noremap = true, silent = true }},
+    ['<leader>f']  = {vim.lsp.buf.formatting,                    {}},
+    ['<leader>a']  = {require'lspsaga.codeaction'.code_action, { noremap = true, silent = true }},
 
     -- Close location, quickfix and help windows
     ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    -- ['K']          = {'<cmd>lua show_documentation()<CR>',         {silent = true, noremap = true}},
-    ['K']          = {"<cmd>lua require('lspsaga.hover').render_hover_doc()<CR>",         {silent = true, noremap = true}},
-    -- ['<c-S>']      = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
-    ['<c-S>']      = {"<cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>", { noremap = true, silent = true }},
+    ['K']          = {require'lspsaga.hover'.render_hover_doc,         {silent = true, noremap = true}},
+    ['<c-S>']      = {require'lspsaga.signaturehelp'.signature_help, { noremap = true, silent = true }},
 
-    ['<leader>ld'] = {'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',  {silent = true, nowait = true, noremap = true}},
-    ['<leader>d']  = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',            {silent = true, nowait = true, noremap = true}},
-    ['<leader>i']  = {'<cmd>lua vim.lsp.buf.incoming_calls()<CR>',                {silent = true, nowait = true, noremap = true}},
-    ['<leader>o']  = {'<cmd>lua vim.lsp.buf.outgoing_calls()<CR>',                {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {'<cmd>lua vim.lsp.buf.document_symbol()<CR>',               {silent = true, nowait = true, noremap = true}},
-    ['<leader>w']  = {'<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',              {silent = true, nowait = true, noremap = true}},
-
-    -- gopher
-    -- ['<leader>ge'] = '<Plug>(gopher-error)',
-    -- ['<leader>gi'] = '<Plug>(gopher-if)',
-    -- ['<leader>gm'] = '<Plug>(gopher-implement)',
-    -- ['<leader>gr'] = '<Plug>(gopher-return)',
-    -- ['<leader>gf'] = '<Plug>(gopher-fillstruct)',
+    ['<leader>ld'] = {vim.lsp.diagnostic.show_line_diagnostics,  {silent = true, nowait = true, noremap = true}},
+    ['<leader>d']  = {vim.lsp.diagnostic.set_loclist,            {silent = true, nowait = true, noremap = true}},
+    ['<leader>i']  = {vim.lsp.buf.incoming_calls,                {silent = true, nowait = true, noremap = true}},
+    ['<leader>o']  = {vim.lsp.buf.outgoing_calls,                {silent = true, nowait = true, noremap = true}},
+    ['<leader>s']  = {vim.lsp.buf.document_symbol,               {silent = true, nowait = true, noremap = true}},
+    ['<leader>w']  = {vim.lsp.buf.workspace_symbol,              {silent = true, nowait = true, noremap = true}},
 }
 
 local imap = {
     ['jk']        = '<ESC>',
-    ['<F13>']     = {'<Plug>luasnip-next-choice',                 {silent = true}},
-    ['']         = {'<Plug>luasnip-next-choice',                 {silent = true}},
-    -- ['<C-space>'] = {'<Plug>(completion_trigger)',             {silent = true}},
-    -- ['<c-p>']     = {'<Plug>(completion_trigger)',             {silent = true}},
-    -- inoremap <silent><expr> <C-Space> compe#complete()
-    -- ['<C-space>']  = {'compe#complete()', {silent = true, noremap = true, expr = true}},
-    -- ['<CR>']  = {[[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], {silent = true, noremap = true, expr = true}},
-    ['<C-e>'] = {"compe#close('<C-e>')", {silent = true, noremap = true, expr = true}},
-    ['<C-k>'] = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true}},
-    ['<C-j>'] = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
+    ['<F13>']     = {'<Plug>luasnip-next-choice',     {silent = true}},
+    ['']         = {'<Plug>luasnip-next-choice',     {silent = true}},
+    ['<C-e>']     = {"compe#close('<C-e>')",          {silent = true, noremap = true, expr = true}},
+    ['<C-k>']     = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true}},
+    ['<C-j>']     = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
 
-    -- ['<TAB>']     = {'pumvisible() ? "\\<C-n>" : "\\<TAB>"',   {silent = true, noremap = true, expr = true}},
-    -- ['<S-TAB>']   = {'pumvisible() ? "\\<C-p>" : "\\<S-TAB>"', {silent = true, noremap = true, expr = true}},
-    -- ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
-    -- ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
-
-    -- ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
-    -- ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
-
-    ['<c-S>']     = {'<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap = true}},
+    ['<c-S>']     = {vim.lsp.buf.signature_help, {noremap = true}},
 }
 
 local smap = {
@@ -208,13 +184,7 @@ local smap = {
 }
 local xmap = {}
 local omap = {}
-local vmap = {
-    -- ['<TAB>']  = {'v:lua.tab_complete()', {silent = true, noremap = false, expr = true}},
-    -- ['<S-TAB>']  = {'v:lua.s_tab_complete()', {silent = true, noremap = false, expr = true}},
-
-    -- ['<F13>']  = {'v:lua.F13_complete()', {silent = true, noremap = false, expr = true}},
-    -- ['<S-F13>']  = {'v:lua.s_F13_complete()', {silent = true, noremap = false, expr = true}},
-}
+local vmap = { }
 
 local tmap = {
     ['<ESC>'] = '<C-\\><C-n>',
@@ -229,9 +199,9 @@ local default_args = { noremap = true }
 for mode, map in pairs({ n = nmap, v = vmap, s = smap, t = tmap, c = cmap, i = imap, x = xmap, o = omap }) do
     for from, to in pairs(map) do
         if type(to) == 'table' then
-            vim.api.nvim_set_keymap(mode, from, to[1], to[2])
+            vim.keymap.set(mode, from, to[1], to[2])
         else
-            vim.api.nvim_set_keymap(mode, from, to, default_args)
+            vim.keymap.set(mode, from, to, default_args)
         end
     end
 end
@@ -321,7 +291,9 @@ vim.api.nvim_create_autocmd(
     "TermOpen",
     {
         pattern = 'term://*',
-        command = 'setlocal nonumber',
+        callback = function()
+            vim.wo.number = false
+        end,
         group = group_id
     })
 
@@ -337,7 +309,7 @@ vim.api.nvim_create_autocmd(
     'TextYankPost',
     {
         pattern = '*',
-        callback = function() vim.highlight.on_yank() end,
+        callback = vim.highlight.on_yank,
         group = group_id
     })
 
@@ -381,13 +353,13 @@ vim.api.nvim_add_user_command(
 
 vim.api.nvim_add_user_command(
     'ClearRegisters',
-    function() require'utils'.clear_registers() end,
+    require'utils'.clear_registers,
     {}
 )
 
 vim.api.nvim_add_user_command(
     'Make',
-    function() require'async_make'.make() end,
+    require'async_make'.make,
     {}
 )
 
