@@ -1,10 +1,10 @@
-local lspconfig = require('lspconfig')
+local lspconfig = require'lspconfig'
 
 local function lsp_attach(client, bufnr)
-    require"lsp_signature".on_attach()
+    require'lsp_signature'.on_attach()
 
     if client.resolved_capabilities.code_lens then
-        vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
             buffer = bufnr,
             callback = vim.lsp.codelens.refresh,
         })
@@ -34,7 +34,7 @@ local function lsp_attach(client, bufnr)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require'cmp_nvim_lsp'.update_capabilities(capabilities)
 
 local lsp_list = {
     -- 'bashls', -- high CPU usage...

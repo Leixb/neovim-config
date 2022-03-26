@@ -83,9 +83,9 @@ end
 package.path = package.path .. ';'.. vim.fn.stdpath('data') .. '/plugin/packer_compiled.lua'
 local ok, _ = pcall(require, 'packer_compiled')
 -- vim.g.did_load_filetypes = 1
-require('plugins')
+require'plugins'
 if not ok then
-    require('packer').sync()
+    require'packer'.sync()
 end
 
 --------------------------------------------------------------------------------
@@ -107,18 +107,18 @@ local nmap = {
     ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
     ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},
 
-    ['<F5>']  = {require'dapui'.toggle,     { noremap = true , silent = true }},
+    ['<F5>']  = {function() require'dapui'.toggle() end,     { noremap = true , silent = true }},
 
 
-    ['<F6>']       = {require'dap'.continue,                                             { noremap = true , silent = true }},
-    ['<F7>']       = {require'dap'.step_over,                                            { noremap = true , silent = true }},
-    ['<F8>']       = {require'dap'.step_into,                                            { noremap = true , silent = true }},
-    ['<F9>']       = {require'dap'.step_out,                                             { noremap = true , silent = true }},
-    ['<leader>b']  = {require'dap'.toggle_breakpoint,                                    { noremap = true , silent = true }},
+    ['<F6>']       = {function() require'dap'.continue() end,                                             { noremap = true , silent = true }},
+    ['<F7>']       = {function() require'dap'.step_over() end,                                            { noremap = true , silent = true }},
+    ['<F8>']       = {function() require'dap'.step_into() end,                                            { noremap = true , silent = true }},
+    ['<F9>']       = {function() require'dap'.step_out() end,                                             { noremap = true , silent = true }},
+    ['<leader>b']  = {function() require'dap'.toggle_breakpoint() end,                                    { noremap = true , silent = true }},
     ['<leader>B']  = {function() require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, { noremap = true , silent = true }},
     ['<leader>lp'] = {function() require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end,{ noremap = true , silent = true }},
-    ['<leader>dr'] = {require'dap'.repl.open,                                            { noremap = true , silent = true }},
-    ['<leader>dl'] = {require'dap'.run_last,                                             { noremap = true , silent = true }},
+    ['<leader>dr'] = {function() require'dap'.repl.open() end,                                            { noremap = true , silent = true }},
+    ['<leader>dl'] = {function() require'dap'.run_last() end,                                             { noremap = true , silent = true }},
 
     ['<leader>bd'] = {"<cmd>BufferClose<CR>", {noremap = true, silent = true}},
 
@@ -133,10 +133,10 @@ local nmap = {
 
 -- Telescope mappings
 
-    ['<C-S-p>']          = require'telescope.builtin'.git_files,
-    ['<C-p>']            = require'telescope.builtin'.fd,
-    ['<leader><leader>'] = require'telescope.builtin'.buffers,
-    ['<Bs>']             = require'telescope.builtin'.live_grep,
+    ['<C-S-p>']          = function() require'telescope.builtin'.git_files() end,
+    ['<C-p>']            = function() require'telescope.builtin'.fd() end,
+    ['<leader><leader>'] = function() require'telescope.builtin'.buffers() end,
+    ['<Bs>']             = function() require'telescope.builtin'.live_grep() end,
 
 -- LSP mappings
 
@@ -149,15 +149,15 @@ local nmap = {
     ['gi']         = { vim.lsp.buf.implementation,  { silent = true }},
     ['gr']         = { vim.lsp.buf.references,      { silent = true }},
 
-    ['<leader>rn'] = {require'lspsaga.rename'.rename,          { noremap = true, silent = true }},
+    ['<leader>rn'] = {function() require'lspsaga.rename'.rename() end,          { noremap = true, silent = true }},
     ['<leader>f']  = {vim.lsp.buf.formatting,                    {}},
-    ['<leader>a']  = {require'lspsaga.codeaction'.code_action, { noremap = true, silent = true }},
+    ['<leader>a']  = {function() require'lspsaga.codeaction'.code_action() end, { noremap = true, silent = true }},
 
     -- Close location, quickfix and help windows
     ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    ['K']          = {require'lspsaga.hover'.render_hover_doc,         {silent = true, noremap = true}},
-    ['<c-S>']      = {require'lspsaga.signaturehelp'.signature_help, { noremap = true, silent = true }},
+    ['K']          = {function() require'lspsaga.hover'.render_hover_doc() end,         {silent = true, noremap = true}},
+    ['<c-S>']      = {function() require'lspsaga.signaturehelp'.signature_help() end, { noremap = true, silent = true }},
 
     ['<leader>ld'] = {vim.lsp.diagnostic.show_line_diagnostics,  {silent = true, nowait = true, noremap = true}},
     ['<leader>d']  = {vim.lsp.diagnostic.set_loclist,            {silent = true, nowait = true, noremap = true}},
@@ -353,13 +353,13 @@ vim.api.nvim_add_user_command(
 
 vim.api.nvim_add_user_command(
     'ClearRegisters',
-    require'utils'.clear_registers,
+    function() require'utils'.clear_registers() end,
     {}
 )
 
 vim.api.nvim_add_user_command(
     'Make',
-    require'async_make'.make,
+    function() require'async_make'.make() end,
     {}
 )
 
