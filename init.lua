@@ -334,22 +334,6 @@ vim.api.nvim_create_autocmd(
     })
 
 vim.api.nvim_create_autocmd(
-    {'CursorHold', 'CursorHoldI'},
-    {
-        pattern = '<buffer>',
-        callback = function() vim.lsp.buf.document_highlight() end,
-        group = group_id
-    })
-
-vim.api.nvim_create_autocmd(
-    'CursorMoved',
-    {
-        pattern = '<buffer>',
-        callback = function() vim.lsp.buf.clear_references() end,
-        group = group_id
-    })
-
-vim.api.nvim_create_autocmd(
     'TextYankPost',
     {
         pattern = '*',

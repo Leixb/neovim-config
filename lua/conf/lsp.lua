@@ -1,7 +1,36 @@
 local lspconfig = require('lspconfig')
 
-local function lsp_attach(client)
+local function lsp_attach(client, bufnr)
     require"lsp_signature".on_attach()
+
+    if client.resolved_capabilities.code_lens then
+        vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+            buffer = bufnr,
+            callback = vim.lsp.codelens.refresh,
+        })
+    end
+
+    if client.resolved_capabilities.document_highlight then
+
+        local group_id = vim.api.nvim_create_augroup('lsp-highlight', { clear = true })
+
+        vim.api.nvim_create_autocmd(
+            {'CursorHold', 'CursorHoldI'},
+            {
+                buffer = bufnr,
+                callback = vim.lsp.buf.document_highlight,
+                group = group_id
+            })
+
+        vim.api.nvim_create_autocmd(
+            'CursorMoved',
+            {
+                buffer = bufnr,
+                callback = vim.lsp.buf.clear_references,
+                group = group_id
+            })
+    end
+
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
