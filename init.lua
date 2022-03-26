@@ -362,15 +362,3 @@ vim.api.nvim_add_user_command(
     function() require'async_make'.make() end,
     {}
 )
-
---------------------------------------------------------------------------------
--- Helper funcitons
---------------------------------------------------------------------------------
-
-function _G.show_documentation()
-	if vim.tbl_contains({'vim', 'help'}, vim.bo.filetype) then
-		vim.api.nvim_command('help ' .. vim.fn.expand('<cword>'))
-	else
-        vim.lsp.buf.hover()
-	end
-end
