@@ -153,6 +153,9 @@ return require'packer'.startup{function(use)
         config = function() require'spellsitter'.setup() end
     }
 
+    -- Copilot
+    use {'github/copilot.vim'}
+
     -- LSP
     use {
         'neovim/nvim-lspconfig',
