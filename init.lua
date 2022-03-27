@@ -176,6 +176,8 @@ local imap = {
     ['<C-j>']     = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
 
     ['<c-S>']     = {vim.lsp.buf.signature_help, {noremap = true}},
+
+    ['<M-;>']     = {'copilot#Accept("<M-;>")', {silent = true, noremap = true, expr = true}}
 }
 
 local smap = {
@@ -274,6 +276,9 @@ local vars = {
 
     -- R_user_maps_only = 1,
     R_assign = 0,
+
+    -- copilot
+    copilot_no_tab_map = true,
 }
 
 for k,v in pairs(vars) do
