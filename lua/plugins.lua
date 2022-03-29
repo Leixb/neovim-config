@@ -111,7 +111,7 @@ return require'packer'.startup{function(use)
             }
         },
         {'junegunn/gv.vim',     cmd = 'GV'},
-        {'tanvirtin/vgit.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = "require'conf.vgit'"},
+        {'tanvirtin/vgit.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = "require'conf._vgit'"},
     }
 
     -- Spell
