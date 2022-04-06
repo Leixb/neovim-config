@@ -302,6 +302,17 @@ vim.api.nvim_create_autocmd(
         group = group_id
     })
 
+
+vim.api.nvim_create_autocmd(
+    'BufRead',
+    {
+        pattern = 'flake.lock',
+        callback = function()
+            vim.bo.ft = 'json'
+        end,
+        group = group_id
+    })
+
 vim.api.nvim_create_autocmd(
     'TermOpen',
     {
