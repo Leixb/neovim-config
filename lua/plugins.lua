@@ -33,7 +33,7 @@ return require'packer'.startup{function(use)
     use {
             'kyazdani42/nvim-web-devicons',
         {
-            'hoob3rt/lualine.nvim',
+            'nvim-lualine/lualine.nvim',
             config = function() require'conf.statusline' end,
             requires = {{'kyazdani42/nvim-web-devicons', opt = true}, 'arkav/lualine-lsp-progress'},
         },
