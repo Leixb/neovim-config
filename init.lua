@@ -69,6 +69,8 @@ local opts = {
     formatoptions = 'jcroql',
 
     omnifunc      = 'v:lua.vim.lsp.omnifunc',
+
+    laststatus    = 3, -- Global statusline
 }
 
 for k, v in pairs(opts) do
