@@ -104,7 +104,7 @@ local nmap = {
     ['<C-l>'] = '<C-w><C-l>',
     ['<C-h>'] = '<C-w><C-h>',
 
-    ['<F1>']  = {'<cmd>NvimTreeToggle<CR>', { noremap = true , silent = true }},
+    ['<F1>']  = {'<cmd>NeoTree reveal<CR>', { noremap = true , silent = true }},
     ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true }},
     ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
     ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},

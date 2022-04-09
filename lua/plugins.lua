@@ -41,11 +41,17 @@ return require'packer'.startup{function(use)
             'romgrk/barbar.nvim',
             requires = {'kyazdani42/nvim-web-devicons', opt = true},
         },
-        -- {
-            -- 'kyazdani42/nvim-tree.lua', module = 'nvim-tree', cmd = {'NvimtreeToggle', 'NvimtreeOpen'},
-            -- config = function() require'nvim-tree'.setup() end,
-            -- requires = {'kyazdani42/nvim-web-devicons', opt = true},
-        -- }
+        {
+          "nvim-neo-tree/neo-tree.nvim",
+            branch = "v2.x",
+            requires = {
+              "nvim-lua/plenary.nvim",
+              "kyazdani42/nvim-web-devicons",
+              "MunifTanjim/nui.nvim",
+            },
+            config = function() require'conf.tree'.setup() end,
+            cmd = 'NeoTree',
+        },
     }
 
     -- Colorscheme
