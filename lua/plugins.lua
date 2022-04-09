@@ -50,13 +50,7 @@ return require'packer'.startup{function(use)
               "MunifTanjim/nui.nvim",
             },
             config = function() require'conf.tree' end,
-            -- cmd = {"Neotree", "NeoTreeClose", "NeoTreeFloat",
-                -- "NeoTreeFloatToggle", "NeoTreeFocus", "NeoTreeFocusToggle",
-                -- "NeoTreeLogs", "NeoTreePasteConfig", "NeoTreeReveal",
-                -- "NeoTreeRevealInSplit", "NeoTreeRevealInSplitToggle",
-                -- "NeoTreeRevealToggle", "NeoTreeSetLogLevel", "NeoTreeShow",
-                -- "NeoTreeShowInSplit", "NeoTreeShowInSplitToggle",
-                -- "NeoTreeShowToggle", },
+            -- cmd = "Neotree",
         },
     }
 
