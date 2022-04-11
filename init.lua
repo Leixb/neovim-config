@@ -351,31 +351,31 @@ vim.api.nvim_create_autocmd(
 -- commands
 --------------------------------------------------------------------------------
 
-vim.api.nvim_add_user_command(
+vim.api.nvim_create_user_command(
     'DiffOrig',
     'vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis',
     {}
 )
 
-vim.api.nvim_add_user_command(
+vim.api.nvim_create_user_command(
     'T',
     'split | terminal <args>',
     { nargs='*' }
 )
 
-vim.api.nvim_add_user_command(
+vim.api.nvim_create_user_command(
     'VT',
     'vsplit | terminal <args>',
     { nargs='*' }
 )
 
-vim.api.nvim_add_user_command(
+vim.api.nvim_create_user_command(
     'ClearRegisters',
     function() require'utils'.clear_registers() end,
     {}
 )
 
-vim.api.nvim_add_user_command(
+vim.api.nvim_create_user_command(
     'Make',
     function() require'async_make'.make() end,
     {}
