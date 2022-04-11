@@ -10,7 +10,7 @@ parser_configs.norg = {
 
 require'nvim-treesitter.configs'.setup {
     highlight = {enable = true},
-    ensure_installed = 'maintained',
+    ensure_installed = 'all',
     indent = {enable = true},
     autopairs = {enable = true},
     rainbow = {enable = true},
