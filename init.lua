@@ -139,6 +139,7 @@ local nmap = {
     ['<C-p>']            = {function() require'telescope.builtin'.fd() end, {desc = "Telescope fd"}},
     ['<leader><leader>'] = {function() require'telescope.builtin'.buffers() end, {desc = "Telescope buffers"}},
     ['<Bs>']             = {function() require'telescope.builtin'.live_grep() end, {desc = "Telescope live_grep"}},
+    ['<CR>']             = {function() require'telescope.builtin'.builtin() end, {desc = "Telescope"}},
 
 -- LSP mappings
 
