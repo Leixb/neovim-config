@@ -327,7 +327,7 @@ vim.api.nvim_create_autocmd(
     'TextYankPost',
     {
         pattern = '*',
-        callback = vim.highlight.on_yank,
+        callback = function() vim.highlight.on_yank() end,
         group = group_id
     })
 
