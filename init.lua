@@ -104,41 +104,41 @@ local nmap = {
     ['<C-l>'] = '<C-w><C-l>',
     ['<C-h>'] = '<C-w><C-h>',
 
-    ['<F1>']  = {'<cmd>Neotree toggle<CR>', { noremap = true , silent = true }},
-    ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true }},
-    ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true }},
-    ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true }},
+    ['<F1>']  = {'<cmd>Neotree toggle<CR>', { noremap = true , silent = true, desc = "Neotree toggle" }},
+    ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true, desc = "BufferPrevious" }},
+    ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true, desc = "BufferNext" }},
+    ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true, desc = "SymbolsOutline toggle" }},
 
-    ['<F5>']  = {function() require'dapui'.toggle() end,     { noremap = true , silent = true }},
+    ['<F5>']  = {function() require'dapui'.toggle() end,     { noremap = true , silent = true, desc = "DapUI toggle" }},
 
 
-    ['<F6>']       = {function() require'dap'.continue() end,                                             { noremap = true , silent = true }},
-    ['<F7>']       = {function() require'dap'.step_over() end,                                            { noremap = true , silent = true }},
-    ['<F8>']       = {function() require'dap'.step_into() end,                                            { noremap = true , silent = true }},
-    ['<F9>']       = {function() require'dap'.step_out() end,                                             { noremap = true , silent = true }},
-    ['<leader>b']  = {function() require'dap'.toggle_breakpoint() end,                                    { noremap = true , silent = true }},
-    ['<leader>B']  = {function() require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, { noremap = true , silent = true }},
-    ['<leader>lp'] = {function() require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end,{ noremap = true , silent = true }},
-    ['<leader>dr'] = {function() require'dap'.repl.open() end,                                            { noremap = true , silent = true }},
-    ['<leader>dl'] = {function() require'dap'.run_last() end,                                             { noremap = true , silent = true }},
+    ['<F6>']       = {function() require'dap'.continue() end,                                             { noremap = true , silent = true, desc = "DAP continue"}},
+    ['<F7>']       = {function() require'dap'.step_over() end,                                            { noremap = true , silent = true, desc = "DAP step over" }},
+    ['<F8>']       = {function() require'dap'.step_into() end,                                            { noremap = true , silent = true, desc = "DAP step into"}},
+    ['<F9>']       = {function() require'dap'.step_out() end,                                             { noremap = true , silent = true, desc = "DAP setp out" }},
+    ['<leader>b']  = {function() require'dap'.toggle_breakpoint() end,                                    { noremap = true , silent = true, desc = "DAP toggle breakpoint"}},
+    ['<leader>B']  = {function() require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, { noremap = true , silent = true, desc = "DAP set conditional breakpoint"}},
+    ['<leader>lp'] = {function() require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end,{ noremap = true , silent = true, desc = "DAP log point" }},
+    ['<leader>dr'] = {function() require'dap'.repl.open() end,                                            { noremap = true , silent = true, desc = "DAP repl"}},
+    ['<leader>dl'] = {function() require'dap'.run_last() end,                                             { noremap = true , silent = true, desc = "DAP run last" }},
 
-    ['<leader>bd'] = {'<cmd>BufferClose<CR>', {noremap = true, silent = true}},
+    ['<leader>bd'] = {'<cmd>BufferClose<CR>', {noremap = true, silent = true, desc = "BufferClose"}},
 
-    ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true }},
+    ['<F12>'] = {'magg=G`a',             { noremap = true , silent = true, desc = "Reindent"}},
 
-    ['Y'] = 'y$',
+    ['Y'] = {'y$', {desc = "Yank till eol"}},
 
-    ['n'] = 'nzzzv',
-    ['N'] = 'Nzzzv',
+    ['n'] = {'nzzzv', {desc = "Next centered"}},
+    ['N'] = {'Nzzzv', {desc = "Backwards Next centered"}},
 
-    ['<leader>m'] = {'<cmd>Make<CR>', { noremap = true , silent = true }},
+    ['<leader>m'] = {'<cmd>Make<CR>', { noremap = true , silent = true, desc = "Make"}},
 
 -- Telescope mappings
 
-    ['<C-S-p>']          = function() require'telescope.builtin'.git_files() end,
-    ['<C-p>']            = function() require'telescope.builtin'.fd() end,
-    ['<leader><leader>'] = function() require'telescope.builtin'.buffers() end,
-    ['<Bs>']             = function() require'telescope.builtin'.live_grep() end,
+    ['<C-S-p>']          = {function() require'telescope.builtin'.git_files() end, {desc = "Telescope git_files"}},
+    ['<C-p>']            = {function() require'telescope.builtin'.fd() end, {desc = "Telescope fd"}},
+    ['<leader><leader>'] = {function() require'telescope.builtin'.buffers() end, {desc = "Telescope buffers"}},
+    ['<Bs>']             = {function() require'telescope.builtin'.live_grep() end, {desc = "Telescope live_grep"}},
 
 -- LSP mappings
 
@@ -156,7 +156,7 @@ local nmap = {
     ['<leader>a']  = {function() require'code_action_menu'.open_code_action_menu() end, { noremap = true, silent = true, desc = "Open code action menu"}},
 
     -- Close location, quickfix and help windows
-    ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
+    ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {desc = "Close location, qf and help windows"}},
 
     ['K']          = {vim.lsp.buf.hover,         { silent = true, noremap = true, desc = "Hover definition"}},
     ['<c-S>']      = {vim.lsp.buf.signature_help, { noremap = true, silent = true, desc = "Show signature help" }},
@@ -183,19 +183,19 @@ local imap = {
 }
 
 local smap = {
-    ['<F13>']     = {'<Plug>luasnip-next-choice',                 {silent = true}},
-    ['']         = {'<Plug>luasnip-next-choice',                 {silent = true}},
+    ['<F13>']     = {'<Plug>luasnip-next-choice',                 {silent = true, desc = "Luasnip next choice"}},
+    ['']         = {'<Plug>luasnip-next-choice',                 {silent = true, desc = "Luasnip next choice"}},
 }
 local xmap = {}
 local omap = {}
 local vmap = { }
 
 local tmap = {
-    ['<ESC>'] = '<C-\\><C-n>',
+    ['<ESC>'] = {'<C-\\><C-n>', {desc = "Terminal ESC"}}
 }
 
 local cmap = {
-    ['jk'] = '<ESC>',
+    ['jk'] = {'<ESC>', {desc = "ESC"}}
 }
 
 local default_args = { noremap = true }
