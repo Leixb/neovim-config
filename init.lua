@@ -139,7 +139,13 @@ local nmap = {
     ['<C-p>']            = {function() require'telescope.builtin'.fd() end, {desc = "Telescope fd"}},
     ['<leader><leader>'] = {function() require'telescope.builtin'.buffers() end, {desc = "Telescope buffers"}},
     ['<Bs>']             = {function() require'telescope.builtin'.live_grep() end, {desc = "Telescope live_grep"}},
-    ['<CR>']             = {function() require'telescope.builtin'.builtin() end, {desc = "Telescope"}},
+    ['<CR>']             = {function()
+        if vim.bo.buftype == '' then
+            require'telescope.builtin'.builtin()
+        else
+            vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n')
+        end
+    end, {desc = 'Telescope'}},
 
 -- LSP mappings
 
