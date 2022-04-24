@@ -142,44 +142,44 @@ local nmap = {
 
 -- LSP mappings
 
-    ['[g']         = { vim.lsp.diagnostic.goto_prev, { silent = true }},
-    [']g']         = { vim.lsp.diagnostic.goto_next, { silent = true }},
+    ['[g']         = { vim.lsp.diagnostic.goto_prev, { silent = true, desc = "Goto prev diagnostic"}},
+    [']g']         = { vim.lsp.diagnostic.goto_next, { silent = true, desc = "Goto next diagnostic" }},
 
-    ['gd']         = { vim.lsp.buf.definition,      { silent = true }},
+    ['gd']         = { vim.lsp.buf.definition,      { silent = true, desc = "Goto definition" }},
 
-    ['gy']         = { vim.lsp.buf.type_definition, { silent = true }},
-    ['gi']         = { vim.lsp.buf.implementation,  { silent = true }},
-    ['gr']         = { vim.lsp.buf.references,      { silent = true }},
+    ['gy']         = { vim.lsp.buf.type_definition, { silent = true, desc = "Goto type definition" }},
+    ['gi']         = { vim.lsp.buf.implementation,  { silent = true, desc = "Goto implementation" }},
+    ['gr']         = { vim.lsp.buf.references,      { silent = true, desc = "Goto references"}},
 
-    ['<leader>rn'] = {vim.lsp.buf.rename,                                               { noremap = true, silent = true }},
-    ['<leader>f']  = {vim.lsp.buf.formatting,                                           {}},
-    ['<leader>a']  = {function() require'code_action_menu'.open_code_action_menu() end, { noremap = true, silent = true }},
+    ['<leader>rn'] = {vim.lsp.buf.rename,                                               { noremap = true, silent = true, desc = "Rename" }},
+    ['<leader>f']  = {vim.lsp.buf.formatting,                                           { desc = "Format buffer" }},
+    ['<leader>a']  = {function() require'code_action_menu'.open_code_action_menu() end, { noremap = true, silent = true, desc = "Open code action menu"}},
 
     -- Close location, quickfix and help windows
     ['<leader>c']  = {'<cmd>ccl <bar> lcl <bar> helpc <CR>', {}},
 
-    ['K']          = {vim.lsp.buf.hover,         {silent = true, noremap = true}},
-    ['<c-S>']      = {vim.lsp.buf.signature_help, { noremap = true, silent = true }},
+    ['K']          = {vim.lsp.buf.hover,         { silent = true, noremap = true, desc = "Hover definition"}},
+    ['<c-S>']      = {vim.lsp.buf.signature_help, { noremap = true, silent = true, desc = "Show signature help" }},
 
-    ['<leader>ld'] = {vim.lsp.diagnostic.show_line_diagnostics,  {silent = true, nowait = true, noremap = true}},
-    ['<leader>d']  = {vim.lsp.diagnostic.set_loclist,            {silent = true, nowait = true, noremap = true}},
-    ['<leader>i']  = {vim.lsp.buf.incoming_calls,                {silent = true, nowait = true, noremap = true}},
-    ['<leader>o']  = {vim.lsp.buf.outgoing_calls,                {silent = true, nowait = true, noremap = true}},
-    ['<leader>s']  = {vim.lsp.buf.document_symbol,               {silent = true, nowait = true, noremap = true}},
-    ['<leader>w']  = {vim.lsp.buf.workspace_symbol,              {silent = true, nowait = true, noremap = true}},
+    ['<leader>ld'] = {vim.diagnostic.open_float,                 {silent = true, nowait = true, noremap = true, desc = "Show line diagnostics"}},
+    ['<leader>d']  = {vim.diagnostic.setloclist,                 {silent = true, nowait = true, noremap = true, desc = "Set location list"}},
+    ['<leader>i']  = {vim.lsp.buf.incoming_calls,                {silent = true, nowait = true, noremap = true, desc = "Show incoming calls"}},
+    ['<leader>o']  = {vim.lsp.buf.outgoing_calls,                {silent = true, nowait = true, noremap = true, desc = "Show outgoing calls"}},
+    ['<leader>s']  = {vim.lsp.buf.document_symbol,               {silent = true, nowait = true, noremap = true, desc = "Show document symbols"}},
+    ['<leader>w']  = {vim.lsp.buf.workspace_symbol,              {silent = true, nowait = true, noremap = true, desc = "Show workspace symbols"}},
 }
 
 local imap = {
     ['jk']        = '<ESC>',
-    ['<F13>']     = {'<Plug>luasnip-next-choice',     {silent = true}},
-    ['']         = {'<Plug>luasnip-next-choice',     {silent = true}},
-    ['<C-e>']     = {"compe#close('<C-e>')",          {silent = true, noremap = true, expr = true}},
-    ['<C-k>']     = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true}},
-    ['<C-j>']     = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true}},
+    ['<F13>']     = {'<Plug>luasnip-next-choice',     {silent = true, desc = "Luasnip next choice"}},
+    ['']         = {'<Plug>luasnip-next-choice',     {silent = true, desc = "Luasnip next choice"}},
+    ['<C-e>']     = {"compe#close('<C-e>')",          {silent = true, noremap = true, expr = true, desc = "compe close"}},
+    ['<C-j>']     = {"compe#scroll({ 'delta': -4 })", {silent = true, noremap = true, expr = true, desc = "compe scroll up"}},
+    ['<C-k>']     = {"compe#scroll({ 'delta': +4 })", {silent = true, noremap = true, expr = true, desc = "compe scroll down"}},
 
-    ['<c-S>']     = {vim.lsp.buf.signature_help, {noremap = true}},
+    ['<c-S>']     = {vim.lsp.buf.signature_help, {noremap = true, desc = "Show signature help"}},
 
-    ['<M-;>']     = {'copilot#Accept("<M-;>")', {silent = true, noremap = true, expr = true}}
+    ['<M-;>']     = {'copilot#Accept("<M-;>")', {silent = true, noremap = true, expr = true, desc = "Copilot accept"}}
 }
 
 local smap = {
