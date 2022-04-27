@@ -3,6 +3,9 @@ local lspconfig = require'lspconfig'
 local function lsp_attach(client, bufnr)
     require'lsp_signature'.on_attach()
 
+    require("notify")(string.format('[lsp] %s', client.name),
+                                    'info', {title = '[lsp] Active'})
+
     if client.resolved_capabilities.code_lens then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
             buffer = bufnr,
@@ -132,6 +135,24 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
   border = 'rounded',
 })
+
+local notify = require 'notify'
+vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
+  local client = vim.lsp.get_client_by_id(ctx.client_id)
+  local lvl = ({
+    'ERROR',
+    'WARN',
+    'INFO',
+    'DEBUG',
+  })[result.type]
+  notify({ result.message }, lvl, {
+    title = 'LSP | ' .. client.name,
+    timeout = 10000,
+    keep = function()
+      return lvl == 'ERROR' or lvl == 'WARN'
+    end,
+  })
+end
 
 local signs = {
     Error = ' ',

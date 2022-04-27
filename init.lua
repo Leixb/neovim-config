@@ -149,8 +149,8 @@ local nmap = {
 
 -- LSP mappings
 
-    ['[g']         = { vim.lsp.diagnostic.goto_prev, { silent = true, desc = "Goto prev diagnostic"}},
-    [']g']         = { vim.lsp.diagnostic.goto_next, { silent = true, desc = "Goto next diagnostic" }},
+    ['[g']         = { vim.diagnostic.goto_prev,    { silent = true, desc = "Goto prev diagnostic"}},
+    [']g']         = { vim.diagnostic.goto_next,    { silent = true, desc = "Goto next diagnostic" }},
 
     ['gd']         = { vim.lsp.buf.definition,      { silent = true, desc = "Goto definition" }},
 

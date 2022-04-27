@@ -54,6 +54,10 @@ return require'packer'.startup{function(use)
         },
     }
 
+    use {
+        'rcarriga/nvim-notify', config = function() vim.notify = require'notify' end,
+    }
+
     -- Colorscheme
     use {
         'bluz71/vim-nightfly-guicolors',
@@ -80,7 +84,11 @@ return require'packer'.startup{function(use)
 
     use {'nvim-lua/telescope.nvim', module = 'telescope', cmd = 'Telescope',
         requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim' },
-        config = function() require'conf.telescope' end}
+        config = function()
+            require'conf.telescope'
+            require'telescope'.extensions.notify.notify()
+            require'telescope'.load_extension('notify')
+        end}
 
     use { 'nvim-treesitter/nvim-treesitter', config = function() require'conf.treesitter' end,
         run = ':TSUpdate',
