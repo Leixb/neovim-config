@@ -6,14 +6,14 @@ local function lsp_attach(client, bufnr)
     require("notify")(string.format('[lsp] %s', client.name),
                                     'info', {title = '[lsp] Active'})
 
-    if client.resolved_capabilities.code_lens then
+    if client.server_capabilities.codeLensProvider then
         vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
             buffer = bufnr,
             callback = vim.lsp.codelens.refresh,
         })
     end
 
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.documentHightlightProvider then
 
         local group_id = vim.api.nvim_create_augroup('lsp-highlight', { clear = true })
 
