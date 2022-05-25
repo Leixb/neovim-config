@@ -105,8 +105,8 @@ local nmap = {
     ['<C-h>'] = '<C-w><C-h>',
 
     ['<F1>']  = {'<cmd>Neotree toggle<CR>', { noremap = true , silent = true, desc = "Neotree toggle" }},
-    ['<F2>']  = {'<cmd>BufferPrevious!<CR>',  { noremap = true , silent = true, desc = "BufferPrevious" }},
-    ['<F3>']  = {'<cmd>BufferNext!<CR>',      { noremap = true , silent = true, desc = "BufferNext" }},
+    ['<F2>']  = {'<cmd>BufferPrevious<CR>',  { noremap = true , silent = true, desc = "BufferPrevious" }},
+    ['<F3>']  = {'<cmd>BufferNext<CR>',      { noremap = true , silent = true, desc = "BufferNext" }},
     ['<F4>']  = {'<cmd>SymbolsOutline<CR>',     { noremap = true , silent = true, desc = "SymbolsOutline toggle" }},
 
     ['<F5>']  = {function() require'dapui'.toggle() end,     { noremap = true , silent = true, desc = "DapUI toggle" }},
