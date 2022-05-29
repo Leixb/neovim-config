@@ -135,6 +135,11 @@ return require'packer'.startup{function(use)
         'lewis6991/spellsitter.nvim',
         config = function() require'spellsitter'.setup() end
     }
+    use {'anufrievroman/vim-angry-reviewer', cmd = 'AngryReviewer'}
+    use { "brymer-meneses/grammar-guard.nvim", requires = { "neovim/nvim-lspconfig", "williamboman/nvim-lsp-installer" },
+        config = function() require'conf.grammar-guard' end,
+    }
+
 
     -- Copilot
     use {'github/copilot.vim'}
