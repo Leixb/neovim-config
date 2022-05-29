@@ -98,6 +98,7 @@ return require'packer'.startup{function(use)
             { 'JoosepAlviste/nvim-ts-context-commentstring', requires = 'tpope/vim-commentary' },
         },
     }
+    use {'nvim-treesitter/nvim-treesitter-refactor', cmd = {'Refactor'}}
 
     -- Language specific
     use {
