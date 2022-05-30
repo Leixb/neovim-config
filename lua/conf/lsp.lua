@@ -52,7 +52,6 @@ local lsp_list = {
     'jsonls',
     'julials',
     -- 'kotlin_language_server',
-    'pylsp',
     'rnix',
     'r_language_server',
     -- 'rls',
@@ -72,6 +71,24 @@ end
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
+
+lspconfig.pylsp.setup {
+    on_attach = lsp_attach,
+    capabilities = capabilities,
+    settings = {
+        formatCommand = { "black" },
+        pylsp = {
+            plugins = {
+                -- pylint = {args = {'--ignore=E501', '-'}, enabled=true, debounce=200},
+                pycodestyle = {
+                    enabled = true,
+                    ignore = {'E501'},
+                    maxLineLength = 120,
+                }
+            }
+        }
+    }
+}
 
 lspconfig.sumneko_lua.setup {
     settings = {
