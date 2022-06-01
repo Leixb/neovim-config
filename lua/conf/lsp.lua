@@ -55,6 +55,7 @@ local lsp_list = {
     'rnix',
     'r_language_server',
     -- 'rls',
+    'svelte',
     'texlab',
     'tsserver',
     'vimls',
