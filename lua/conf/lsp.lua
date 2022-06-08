@@ -85,7 +85,10 @@ lspconfig.pylsp.setup {
                     enabled = true,
                     ignore = {'E501'},
                     maxLineLength = 120,
-                }
+                },
+                pyls_mypy = {
+                    enabled = true,
+                },
             }
         }
     }
