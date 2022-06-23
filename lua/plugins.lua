@@ -112,6 +112,11 @@ return require'packer'.startup{function(use)
         {'dag/vim-fish',                 ft = 'fish'},
         {'jalvesaq/Nvim-R',              branch = 'stable', ft={'r', 'rmd', 'rout', 'rnoweb'}},
         {'LnL7/vim-nix',                 ft = 'nix'},
+        {'scalameta/nvim-metals',
+            requires = { "nvim-lua/plenary.nvim" },
+            ft={'scala', 'sbt', 'java'},
+            config = function() require("metals").initialize_or_attach({}) end,
+        },
         'neo4j-contrib/cypher-vim-syntax',
     }
 
