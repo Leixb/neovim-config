@@ -60,8 +60,12 @@ return require'packer'.startup{function(use)
 
     -- Colorscheme
     use {
-        'bluz71/vim-nightfly-guicolors',
-        config = function() vim.api.nvim_command('colorscheme ' .. 'nightfly') end
+        'catppuccin/nvim',
+        as = 'catppuccin',
+        config = function()
+            vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
+            vim.cmd[[colorscheme catppuccin]]
+        end,
     }
 
     -- Completion
