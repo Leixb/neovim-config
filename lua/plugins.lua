@@ -139,10 +139,10 @@ return require'packer'.startup{function(use)
 
     -- Spell
     use {'rhysd/vim-grammarous', cmd = {'GrammarousCheck'}, }
-    use {
-        'lewis6991/spellsitter.nvim',
-        config = function() require'spellsitter'.setup() end
-    }
+    -- use {
+    --     'lewis6991/spellsitter.nvim',
+    --     config = function() require'spellsitter'.setup() end
+    -- }
     use {'anufrievroman/vim-angry-reviewer', cmd = 'AngryReviewer'}
     use { "brymer-meneses/grammar-guard.nvim", requires = { "neovim/nvim-lspconfig", "williamboman/nvim-lsp-installer" },
         config = function() require'conf.grammar-guard' end,
