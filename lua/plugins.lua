@@ -86,11 +86,10 @@ return require'packer'.startup{function(use)
         {'onsails/lspkind-nvim'},
     }
 
-    use {'nvim-lua/telescope.nvim', module = 'telescope', cmd = 'Telescope',
-        requires = { 'nvim-lua/plenary.nvim', 'nvim-lua/popup.nvim' },
+    use {'nvim-telescope/telescope.nvim', module = 'telescope', cmd = 'Telescope',
+        requires = { 'nvim-lua/plenary.nvim' },
         config = function()
             require'conf.telescope'
-            require'telescope'.extensions.notify.notify()
             require'telescope'.load_extension('notify')
         end}
 
