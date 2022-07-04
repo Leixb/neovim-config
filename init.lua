@@ -288,6 +288,9 @@ local vars = {
 
     -- copilot
     copilot_no_tab_map = true,
+    copilot_filetypes = {
+        ["dap-repl"] = false,
+    },
 }
 
 for k,v in pairs(vars) do
