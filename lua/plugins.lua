@@ -94,7 +94,6 @@ return require'packer'.startup{function(use)
         end}
 
     use { 'nvim-treesitter/nvim-treesitter', config = function() require'conf.treesitter' end,
-        run = ':TSUpdate',
         requires = {
             'p00f/nvim-ts-rainbow',
             'windwp/nvim-ts-autotag',
